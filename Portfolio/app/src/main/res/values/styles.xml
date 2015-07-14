@@ -1,0 +1,53 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
+    </style>
+
+    <!-- GLOBAL STYLES -->
+    <style name="AppToolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <style name="MainScreenFragmentContainer"></style>
+    <style name="PortfolioButton">
+        <item name="android:background">@color/ButtonBackground</item>
+        <item name="android:textColor">@color/TextColorLight</item>
+        <item name="android:layout_marginTop">@dimen/MainScreenButtonMarginTop</item>
+    </style>
+
+
+    <!-- FRAGMENT MAIN -->
+    <style name="MainScreenButtonsParent">
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/MainScreenButtonsParentMarginLeft</item>
+        <item name="android:layout_marginRight">@dimen/MainScreenButtonsParentMarginRight</item>
+    </style>
+    <style name="MainScreenButtonsHeader">
+        <item name="android:text">@string/MainScreenButtonsHeader</item>
+        <item name="android:layout_marginTop">@dimen/MainScreenButtonsHeaderMarginTop</item>
+        <item name="android:layout_marginBottom">@dimen/MainScreenButtonsHeaderMarginBottom</item>
+    </style>
+    <style name="MainButtonSpotifyStreamer" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_spotify_streamer</item>
+    </style>
+    <style name="MainButtonScoresApp" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_scores_app</item>
+    </style>
+    <style name="MainButtonLibraryApp" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_library_app</item>
+    </style>
+    <style name="MainButtonBuildItBigger" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_build_it_bigger</item>
+    </style>
+    <style name="MainButtonXyzReader" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_xyz_reader</item>
+    </style>
+    <style name="MainButtonCapstone" parent="PortfolioButton">
+        <item name="android:text">@string/main_button_capstone_my_own_app</item>
+    </style>
+
+    <string name="MainScreenButtonsHeader">My nanodegree apps</string>
+</resources>

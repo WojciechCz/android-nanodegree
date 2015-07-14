@@ -1,0 +1,48 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MainScreenButtonsParent"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <TextView
+        android:id="@+id/mainScreenButtonsHeader"
+        style="@style/MainScreenButtonsHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/mainButtonSpotifyStreamer"
+        style="@style/MainButtonSpotifyStreamer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+
+    <Button
+        android:id="@+id/mainButtonScoresApp"
+        style="@style/MainButtonScoresApp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+
+    <Button
+        android:id="@+id/mainButtonLibraryApp"
+        style="@style/MainButtonLibraryApp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+
+    <Button
+        android:id="@+id/mainButtonBuildItBigger"
+        style="@style/MainButtonBuildItBigger"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+
+    <Button
+        android:id="@+id/mainButtonXyzReader"
+        style="@style/MainButtonXyzReader"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+
+    <Button
+        android:id="@+id/mainButtonCapstone"
+        style="@style/MainButtonCapstone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/MainButtonsHeight" />
+</LinearLayout>
