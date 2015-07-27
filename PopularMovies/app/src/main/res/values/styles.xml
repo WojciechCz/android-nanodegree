@@ -1,0 +1,75 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
+    </style>
+
+    <!-- MAIN VIEWS -->
+    <style name="AppToolbar">
+        <item name="android:text">@string/toolbarMainText</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <!--<item name="android:background">@android:color/transparent</item>-->
+    </style>
+    <style name="MainScreenFragmentContainer">
+        <item name="android:layout_marginTop">?attr/actionBarSize</item>
+    </style>
+
+    <style name="PopularMoviesFragment">
+        <item name="android:background">@color/ColorBackground</item>
+    </style>
+    <style name="MovieDetailTextView">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textColor">@color/ColorTextDark</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="MovieDetailTextViewLabel">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/ColorTextDarkLight</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
+    <!-- FRAGMENT POPULAR MOVIES -->
+    <style name="PopularMoviesGrid" parent="PopularMoviesFragment">
+        <item name="android:numColumns">4</item>
+        <item name="android:stretchMode">columnWidth</item>
+        <!--<item name="android:columnWidth">90dp</item>-->
+    </style>
+    <style name="ListItemMoviesGridImage">
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ListItemMoviesGridImageTitle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/ColorBackgroundMovieTitle</item>
+    </style>
+
+    <!-- FRAGMENT MOVIE DETAIL -->
+    <style name="MovieDetails">
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:paddingTop">@dimen/detail_backdrop_height</item>
+    </style>
+    <style name="MovieDetails.TitleLabel" parent="MovieDetailTextViewLabel">
+        <item name="android:text">@string/TitleLabel</item>
+    </style>
+    <style name="MovieDetails.Title" parent="MovieDetailTextView"></style>
+    <style name="MovieDetails.ReleaseDateLabel" parent="MovieDetailTextViewLabel">
+        <item name="android:text">@string/ReleaseDateLabel</item>
+    </style>
+    <style name="MovieDetails.ReleaseDate" parent="MovieDetailTextView"></style>
+    <style name="MovieDetails.VoteAverageLabel" parent="MovieDetailTextViewLabel">
+        <item name="android:text">@string/VoteAverageLabel</item>
+    </style>
+    <style name="MovieDetails.VoteAverage" parent="MovieDetailTextView"></style>
+    <style name="MovieDetails.OverviewLabel" parent="MovieDetailTextViewLabel">
+        <item name="android:text">@string/OverviewLabel</item>
+    </style>
+    <style name="MovieDetails.Overview" parent="MovieDetailTextView"></style>
+
+
+</resources>

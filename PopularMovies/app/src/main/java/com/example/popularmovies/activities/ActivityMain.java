@@ -1,0 +1,239 @@
+package com.example.popularmovies.activities;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+
+import com.example.popularmovies.fragments.FragmentMovieDetail;
+import com.example.popularmovies.fragments.FragmentPopularMovies;
+import com.example.popularmovies.R;
+import com.example.popularmovies.models.Movie;
+import com.example.popularmovies.utils.UtilMoviesApi;
+import com.example.popularmovies.utils.UtilParser;
+import com.squareup.picasso.Picasso;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Created by fares on 07.06.15.
+ */
+public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.PopularMovies, AdapterView.OnItemClickListener {
+
+    public static final String LOG_DEBUG = "saarna";
+    // purpose: if try to open same fragment as is currently display -> do nothing
+    private static int activeFragment = -1;
+
+
+    public static final int FRAGMENT_POPULAR_MOVIES = 0;
+    public static final int FRAGMENT_MOVIE_DETAIL   = 1;
+
+    public static final int MOVIES_SORT_POPULAR = 1;
+    public static final int MOVIES_SORT_RATED   = 2;
+
+    private Toolbar toolbar;
+    private ImageView collapsingToolbarImage;
+    private boolean collapsingToolbarImageVisible;
+
+    private List<Movie> movies;
+    private Movie selectedMovie;
+
+    private int sortOrder;
+
+    private PopularMoviesDataSetChange mDataSetChange;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        setUpToolbar();
+
+        openFragment(FRAGMENT_POPULAR_MOVIES);
+
+        // default display order
+        sortOrder = MOVIES_SORT_POPULAR;
+
+        downloadMovies();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortingOrder = prefs.getString(getResources().getString(R.string.sorting_order_key), "");
+        if (sortingOrder != null) {
+            if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[0])) {
+                changeSortOrderAndSort(MOVIES_SORT_POPULAR);
+            }
+            else if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[1])) {
+                changeSortOrderAndSort(MOVIES_SORT_RATED);
+            }
+        }
+    }
+
+    private void changeSortOrderAndSort(int newSortOrder) {
+        if (sortOrder!= newSortOrder && newSortOrder == MOVIES_SORT_POPULAR) {
+            sortOrder = newSortOrder;
+            Collections.sort(movies, new Comparator<Movie>() {
+                public int compare(Movie one, Movie two) {
+                    float diff = one.getmPopularity() - two.getmPopularity();
+                    if (diff > 0)
+                        return  1;
+                    else if (diff < 0)
+                        return -1;
+                    return 0;
+                }
+            });
+            mDataSetChange.OnPopularMoviesDataSetChange(movies);
+        }
+        else if (sortOrder!= newSortOrder && newSortOrder == MOVIES_SORT_RATED) {
+            sortOrder = newSortOrder;
+            Collections.sort(movies, new Comparator<Movie>() {
+                public int compare(Movie one, Movie two) {
+                    float diff = one.getmVoteCount() - two.getmVoteCount();
+                    if (diff > 0)
+                        return  1;
+                    else if (diff < 0)
+                        return -1;
+                    return 0;
+                }
+            });
+            mDataSetChange.OnPopularMoviesDataSetChange(movies);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, ActivitySettings.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void downloadMovies() {
+        UtilMoviesApi utilMoviesApi = new UtilMoviesApi();
+        utilMoviesApi.getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY));
+    }
+
+    private void setUpToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.appToolbar);
+        setSupportActionBar(toolbar);
+        collapsingToolbarImage = (ImageView) findViewById(R.id.collapsingToolbarImage);
+    }
+
+    private void openFragment(int fragmentType) {
+        // start transaction when want to display different fragment then current
+        if (!(activeFragment == fragmentType)) {
+            activeFragment = fragmentType;
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            Fragment f = getFragment(fragmentType);
+            fragmentTransaction.replace(R.id.mainScreenFragmentContainer, f);
+
+            fragmentTransaction.commit();
+        }
+    }
+
+    private Fragment getFragment(int fragmentType) {
+        Fragment frag;
+        switch (fragmentType) {
+            case FRAGMENT_POPULAR_MOVIES:
+                if (movies == null)
+                    movies = new LinkedList<>();
+                frag = FragmentPopularMovies.newInstance(movies, this);
+                mDataSetChange = (FragmentPopularMovies) frag;
+                return frag;
+            case FRAGMENT_MOVIE_DETAIL:
+                toolbarImageShow();
+                return FragmentMovieDetail.newInstance(selectedMovie);
+            default:
+                Log.d("test", "I cant find fragment to open");
+                break;
+        }
+        return null;
+    }
+
+    private void toolbarImageShow() {
+        if (selectedMovie != null && collapsingToolbarImage != null){
+            Picasso.with(this)
+                    .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
+                    .into(collapsingToolbarImage);
+            collapsingToolbarImage.setVisibility(View.VISIBLE);
+            collapsingToolbarImageVisible = true;
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+    private void toolbarImageHide() {
+        if (collapsingToolbarImageVisible && selectedMovie != null && collapsingToolbarImage != null){
+            collapsingToolbarImage.setVisibility(View.GONE);
+            collapsingToolbarImageVisible = false;
+            toolbar.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        selectedMovie = (Movie) parent.getAdapter().getItem(position);
+        openFragment(FRAGMENT_MOVIE_DETAIL);
+
+    }
+
+    public interface PopularMoviesDataSetChange {
+        void OnPopularMoviesDataSetChange(List<Movie> movieList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (activeFragment == FRAGMENT_POPULAR_MOVIES) {
+            finish();
+        }
+        else {
+            if (collapsingToolbarImageVisible){
+                toolbarImageHide();
+            }
+            // return to main fragment
+            openFragment(FRAGMENT_POPULAR_MOVIES);
+        }
+    }
+
+    @Override
+    public void OnPopularMoviesJsonReceived(String json) {
+        UtilParser movieParser = new UtilParser();
+        movies = movieParser.jsonParserMovies(json);
+        Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
+//        if (movies != null)
+//            for (Movie m : movies)
+//                Log.d(LOG_DEBUG, m.toString());
+
+        if (movies != null && mDataSetChange != null)
+            mDataSetChange.OnPopularMoviesDataSetChange(movies);
+    }
+}
