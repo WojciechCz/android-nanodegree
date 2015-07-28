@@ -12,6 +12,8 @@ import com.example.popularmovies.models.Movie;
 
 public class FragmentMovieDetail extends Fragment {
 
+    public static final String SAVED_INSTANCE_MOVIE = "movie";
+
     private Movie selectedMovie;
     private TextView mMovieDetailsTitle ;
     private TextView mMovieDetailsReleaseDate;
@@ -29,11 +31,21 @@ public class FragmentMovieDetail extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
+        if(savedInstanceState != null){
+            selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
+        }
+
         linkViews(layout);
 
         fillViewsWithData();
 
         return layout;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
+        super.onSaveInstanceState(outState);
     }
 
     private void fillViewsWithData() {
