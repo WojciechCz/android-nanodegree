@@ -13,6 +13,7 @@ import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.squareup.picasso.Picasso;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +27,10 @@ public class AdapterMovies extends BaseAdapter {
 
     public AdapterMovies(Context mContext, List<Movie> movies) {
         this.mContext = mContext;
-        this.movies = movies;
+        if (movies != null)
+            this.movies = movies;
+        else
+            this.movies = new LinkedList<>();
     }
 
     @Override

@@ -1,9 +1,13 @@
 package com.example.popularmovies.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.popularmovies.fragments.FragmentMovieDetail;
 import com.example.popularmovies.fragments.FragmentPopularMovies;
@@ -26,6 +31,7 @@ import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -37,6 +43,7 @@ import java.util.List;
 public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.PopularMovies, AdapterView.OnItemClickListener {
 
     public static final String LOG_DEBUG = "saarna";
+    public static final String SAVED_INSTANCE_MOVIES = "movies";
     // purpose: if try to open same fragment as is currently display -> do nothing
     private static int activeFragment = -1;
 
@@ -70,12 +77,27 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         // default display order
         sortOrder = MOVIES_SORT_POPULAR;
 
-        downloadMovies();
+        if (savedInstanceState != null) {
+            movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
+            activeFragment = -1;
+            openFragment(FRAGMENT_POPULAR_MOVIES);
+        }
+        else
+            downloadMovies();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if ( (movies == null || movies.isEmpty()) && !isNetworkAvailable()){
+            Toast.makeText(this, "No internet connection !", Toast.LENGTH_LONG).show();
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String sortingOrder = prefs.getString(getResources().getString(R.string.sorting_order_key), "");
         if (sortingOrder != null) {
@@ -86,6 +108,12 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                 changeSortOrderAndSort(MOVIES_SORT_RATED);
             }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void changeSortOrderAndSort(int newSortOrder) {
