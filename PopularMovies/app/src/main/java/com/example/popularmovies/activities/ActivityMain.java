@@ -84,6 +84,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
             selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
             movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
+            mDataSetChange = (FragmentPopularMovies) getSupportFragmentManager().getFragment(savedInstanceState, SAVED_INSTANCE_FRAGMENT);
             if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
                 toolbarImageShow();
         }
@@ -99,9 +100,9 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         if (activeFragment == FRAGMENT_MOVIE_DETAIL)
             outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
         outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
+        getSupportFragmentManager().putFragment(outState, SAVED_INSTANCE_FRAGMENT, (FragmentPopularMovies)mDataSetChange);
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     protected void onResume() {
@@ -110,6 +111,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             Toast.makeText(this, "No internet connection !", Toast.LENGTH_LONG).show();
         }
         setSortOrderFromPrefs();
+        changeSortOrderAndSort();
     }
 
     private boolean isNetworkAvailable() {
@@ -132,31 +134,36 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     }
 
     private void changeSortOrderAndSort() {
-        if (sortOrder == MOVIES_SORT_POPULAR) {
-            Collections.sort(movies, new Comparator<Movie>() {
-                public int compare(Movie one, Movie two) {
-                    float diff = one.getmPopularity() - two.getmPopularity();
-                    if (diff > 0)
-                        return  1;
-                    else if (diff < 0)
-                        return -1;
-                    return 0;
-                }
-            });
-            mDataSetChange.OnPopularMoviesDataSetChange(movies);
-        }
-        else if (sortOrder == MOVIES_SORT_RATED) {
-            Collections.sort(movies, new Comparator<Movie>() {
-                public int compare(Movie one, Movie two) {
-                    float diff = one.getmVoteCount() - two.getmVoteCount();
-                    if (diff > 0)
-                        return  1;
-                    else if (diff < 0)
-                        return -1;
-                    return 0;
-                }
-            });
-            mDataSetChange.OnPopularMoviesDataSetChange(movies);
+        if (movies != null && mDataSetChange != null) {
+            if (sortOrder == MOVIES_SORT_POPULAR) {
+                Collections.sort(movies, new Comparator<Movie>() {
+                    public int compare(Movie one, Movie two) {
+                        float diff = one.getmPopularity() - two.getmPopularity();
+                        if (diff > 0)
+                            return 1;
+                        else if (diff < 0)
+                            return -1;
+                        return 0;
+                    }
+                });
+                mDataSetChange.OnPopularMoviesDataSetChange(movies);
+                String toolbarTitle = getResources().getStringArray(R.array.entries_values_sorting_order)[0];
+                getSupportActionBar().setTitle(toolbarTitle);
+            } else if (sortOrder == MOVIES_SORT_RATED) {
+                Collections.sort(movies, new Comparator<Movie>() {
+                    public int compare(Movie one, Movie two) {
+                        float diff = one.getmVoteCount() - two.getmVoteCount();
+                        if (diff > 0)
+                            return 1;
+                        else if (diff < 0)
+                            return -1;
+                        return 0;
+                    }
+                });
+                mDataSetChange.OnPopularMoviesDataSetChange(movies);
+                String toolbarTitle = getResources().getStringArray(R.array.entries_values_sorting_order)[1];
+                getSupportActionBar().setTitle(toolbarTitle);
+            }
         }
     }
 
@@ -273,7 +280,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
 
         if (movies != null && mDataSetChange != null){
             mDataSetChange.OnPopularMoviesDataSetChange(movies);
-            setSortOrderFromPrefs();
+            changeSortOrderAndSort();
         }
     }
 }
