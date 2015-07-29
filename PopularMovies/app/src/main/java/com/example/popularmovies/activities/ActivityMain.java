@@ -40,10 +40,14 @@ import java.util.List;
 /**
  * Created by fares on 07.06.15.
  */
-public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.PopularMovies, AdapterView.OnItemClickListener {
+public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.PopularMovies {
 
     public static final String LOG_DEBUG = "saarna";
+
+    public static final String SAVED_INSTANCE_MOVIE = "movie";
     public static final String SAVED_INSTANCE_MOVIES = "movies";
+    public static final String SAVED_INSTANCE_FRAGMENT = "fragment";
+    public static final String SAVED_INSTANCE_ACTIVE_FRAGMENT = "active_fragment";
     // purpose: if try to open same fragment as is currently display -> do nothing
     private static int activeFragment = -1;
 
@@ -72,25 +76,32 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
 
         setUpToolbar();
 
-        openFragment(FRAGMENT_POPULAR_MOVIES);
-
         // default display order
-        sortOrder = MOVIES_SORT_POPULAR;
+        setSortOrderFromPrefs();
+
 
         if (savedInstanceState != null) {
+            activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
+            selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
             movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
-            activeFragment = -1;
-            openFragment(FRAGMENT_POPULAR_MOVIES);
+            if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
+                toolbarImageShow();
         }
-        else
+        else {
+            openFragment(FRAGMENT_POPULAR_MOVIES);
             downloadMovies();
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SAVED_INSTANCE_ACTIVE_FRAGMENT, activeFragment);
+        if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+            outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
         outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
         super.onSaveInstanceState(outState);
     }
+
 
     @Override
     protected void onResume() {
@@ -98,16 +109,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         if ( (movies == null || movies.isEmpty()) && !isNetworkAvailable()){
             Toast.makeText(this, "No internet connection !", Toast.LENGTH_LONG).show();
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String sortingOrder = prefs.getString(getResources().getString(R.string.sorting_order_key), "");
-        if (sortingOrder != null) {
-            if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[0])) {
-                changeSortOrderAndSort(MOVIES_SORT_POPULAR);
-            }
-            else if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[1])) {
-                changeSortOrderAndSort(MOVIES_SORT_RATED);
-            }
-        }
+        setSortOrderFromPrefs();
     }
 
     private boolean isNetworkAvailable() {
@@ -116,9 +118,21 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private void changeSortOrderAndSort(int newSortOrder) {
-        if (sortOrder!= newSortOrder && newSortOrder == MOVIES_SORT_POPULAR) {
-            sortOrder = newSortOrder;
+    private void setSortOrderFromPrefs(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortingOrder = prefs.getString(getResources().getString(R.string.sorting_order_key), "");
+        if (sortingOrder != null) {
+            if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[0])) {
+                sortOrder = MOVIES_SORT_POPULAR;
+            }
+            else if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[1])) {
+                sortOrder = MOVIES_SORT_RATED;
+            }
+        }
+    }
+
+    private void changeSortOrderAndSort() {
+        if (sortOrder == MOVIES_SORT_POPULAR) {
             Collections.sort(movies, new Comparator<Movie>() {
                 public int compare(Movie one, Movie two) {
                     float diff = one.getmPopularity() - two.getmPopularity();
@@ -131,8 +145,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             });
             mDataSetChange.OnPopularMoviesDataSetChange(movies);
         }
-        else if (sortOrder!= newSortOrder && newSortOrder == MOVIES_SORT_RATED) {
-            sortOrder = newSortOrder;
+        else if (sortOrder == MOVIES_SORT_RATED) {
             Collections.sort(movies, new Comparator<Movie>() {
                 public int compare(Movie one, Movie two) {
                     float diff = one.getmVoteCount() - two.getmVoteCount();
@@ -144,6 +157,24 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                 }
             });
             mDataSetChange.OnPopularMoviesDataSetChange(movies);
+        }
+    }
+
+    private void toolbarImageShow() {
+        if (selectedMovie != null && collapsingToolbarImage != null){
+            Picasso.with(this)
+                    .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
+                    .into(collapsingToolbarImage);
+            collapsingToolbarImage.setVisibility(View.VISIBLE);
+            collapsingToolbarImageVisible = true;
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+    private void toolbarImageHide() {
+        if (collapsingToolbarImageVisible && selectedMovie != null && collapsingToolbarImage != null){
+            collapsingToolbarImage.setVisibility(View.GONE);
+            collapsingToolbarImageVisible = false;
+            toolbar.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
         }
     }
 
@@ -175,7 +206,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         collapsingToolbarImage = (ImageView) findViewById(R.id.collapsingToolbarImage);
     }
 
-    private void openFragment(int fragmentType) {
+    public void openFragment(int fragmentType) {
         // start transaction when want to display different fragment then current
         if (!(activeFragment == fragmentType)) {
             activeFragment = fragmentType;
@@ -196,7 +227,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             case FRAGMENT_POPULAR_MOVIES:
                 if (movies == null)
                     movies = new LinkedList<>();
-                frag = FragmentPopularMovies.newInstance(movies, this);
+                frag = FragmentPopularMovies.newInstance(movies);
                 mDataSetChange = (FragmentPopularMovies) frag;
                 return frag;
             case FRAGMENT_MOVIE_DETAIL:
@@ -209,29 +240,8 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         return null;
     }
 
-    private void toolbarImageShow() {
-        if (selectedMovie != null && collapsingToolbarImage != null){
-            Picasso.with(this)
-                    .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
-                    .into(collapsingToolbarImage);
-            collapsingToolbarImage.setVisibility(View.VISIBLE);
-            collapsingToolbarImageVisible = true;
-            toolbar.setBackgroundColor(Color.TRANSPARENT);
-        }
-    }
-    private void toolbarImageHide() {
-        if (collapsingToolbarImageVisible && selectedMovie != null && collapsingToolbarImage != null){
-            collapsingToolbarImage.setVisibility(View.GONE);
-            collapsingToolbarImageVisible = false;
-            toolbar.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        selectedMovie = (Movie) parent.getAdapter().getItem(position);
-        openFragment(FRAGMENT_MOVIE_DETAIL);
-
+    public void setSelectedMovie(Movie movie){
+        this.selectedMovie = movie;
     }
 
     public interface PopularMoviesDataSetChange {
@@ -261,7 +271,9 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
 //            for (Movie m : movies)
 //                Log.d(LOG_DEBUG, m.toString());
 
-        if (movies != null && mDataSetChange != null)
+        if (movies != null && mDataSetChange != null){
             mDataSetChange.OnPopularMoviesDataSetChange(movies);
+            setSortOrderFromPrefs();
+        }
     }
 }

@@ -1,18 +1,24 @@
 package com.example.popularmovies.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
 import com.example.popularmovies.models.Movie;
+import com.example.popularmovies.utils.UtilMoviesApi;
+import com.squareup.picasso.Picasso;
 
 public class FragmentMovieDetail extends Fragment {
 
     public static final String SAVED_INSTANCE_MOVIE = "movie";
+    private String sortOrder;
 
     private Movie selectedMovie;
     private TextView mMovieDetailsTitle ;
@@ -36,7 +42,6 @@ public class FragmentMovieDetail extends Fragment {
         }
 
         linkViews(layout);
-
         fillViewsWithData();
 
         return layout;
