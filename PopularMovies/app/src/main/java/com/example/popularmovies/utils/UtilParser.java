@@ -1,5 +1,6 @@
 package com.example.popularmovies.utils;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.popularmovies.models.Movie;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class UtilParser {
     
-    public List<Movie> jsonParserMovies(String json) {
+    public List<Movie> jsonParserMovies(@NonNull String json) throws JsonParseException {
         Type listType = new TypeToken<List<Movie>>() {}.getType();
 
         Gson gson = new GsonBuilder()
@@ -32,10 +33,11 @@ public class UtilParser {
     }
 
     private class JsonDeserializerMovieList implements JsonDeserializer<List<Movie>> {
-
         @Override
         public List<Movie> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
+            if (json == null)
+                return null;
             final JsonArray jsonMoviesList = json.getAsJsonObject().getAsJsonArray("results");
 
             List<Movie> moviesList = new LinkedList<>();

@@ -29,6 +29,7 @@ import com.example.popularmovies.R;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
+import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,7 +84,8 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         if (savedInstanceState != null) {
             activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
             selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
-            movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
+            if (movies == null || movies.isEmpty())
+                movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
             mDataSetChange = (FragmentPopularMovies) getSupportFragmentManager().getFragment(savedInstanceState, SAVED_INSTANCE_FRAGMENT);
             if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
                 toolbarImageShow();
@@ -147,8 +149,6 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                     }
                 });
                 mDataSetChange.OnPopularMoviesDataSetChange(movies);
-                String toolbarTitle = getResources().getStringArray(R.array.entries_values_sorting_order)[0];
-                getSupportActionBar().setTitle(toolbarTitle);
             } else if (sortOrder == MOVIES_SORT_RATED) {
                 Collections.sort(movies, new Comparator<Movie>() {
                     public int compare(Movie one, Movie two) {
@@ -161,8 +161,6 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                     }
                 });
                 mDataSetChange.OnPopularMoviesDataSetChange(movies);
-                String toolbarTitle = getResources().getStringArray(R.array.entries_values_sorting_order)[1];
-                getSupportActionBar().setTitle(toolbarTitle);
             }
         }
     }
@@ -272,7 +270,13 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     @Override
     public void OnPopularMoviesJsonReceived(String json) {
         UtilParser movieParser = new UtilParser();
-        movies = movieParser.jsonParserMovies(json);
+
+        try {
+            movies = movieParser.jsonParserMovies(json);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        }
+        
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
 //        if (movies != null)
 //            for (Movie m : movies)
