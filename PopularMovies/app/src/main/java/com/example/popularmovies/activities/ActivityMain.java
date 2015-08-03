@@ -51,6 +51,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     public static final String SAVED_INSTANCE_ACTIVE_FRAGMENT = "active_fragment";
     // purpose: if try to open same fragment as is currently display -> do nothing
     private static int activeFragment = -1;
+    private Fragment currentFratgment;
 
 
     public static final int FRAGMENT_POPULAR_MOVIES = 0;
@@ -86,7 +87,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
             if (movies == null || movies.isEmpty())
                 movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
-            mDataSetChange = (FragmentPopularMovies) getSupportFragmentManager().getFragment(savedInstanceState, SAVED_INSTANCE_FRAGMENT);
+//            mDataSetChange = (FragmentPopularMovies) getSupportFragmentManager().getFragment(savedInstanceState, SAVED_INSTANCE_FRAGMENT);
             if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
                 toolbarImageShow();
         }
@@ -102,7 +103,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         if (activeFragment == FRAGMENT_MOVIE_DETAIL)
             outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
         outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
-        getSupportFragmentManager().putFragment(outState, SAVED_INSTANCE_FRAGMENT, (FragmentPopularMovies)mDataSetChange);
+//        getSupportFragmentManager().putFragment(outState, SAVED_INSTANCE_FRAGMENT, (FragmentPopularMovies)mDataSetChange);
         super.onSaveInstanceState(outState);
     }
 
@@ -276,7 +277,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         } catch (JsonParseException e) {
             e.printStackTrace();
         }
-        
+
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
 //        if (movies != null)
 //            for (Movie m : movies)
