@@ -93,8 +93,14 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         }
         else {
             openFragment(FRAGMENT_POPULAR_MOVIES);
-            downloadMovies();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (movies == null || movies.isEmpty())
+            downloadMovies();
     }
 
     @Override
