@@ -5,7 +5,10 @@
     android:layout_height="match_parent">
 
         <GridView
-            style="@style/PopularMoviesGrid"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:columnWidth="130dp"
+
             android:id="@+id/popularMoviesGrid"
             android:layout_height="match_parent"
             android:layout_width="match_parent"

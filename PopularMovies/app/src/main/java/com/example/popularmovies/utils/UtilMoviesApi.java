@@ -58,4 +58,36 @@ public class UtilMoviesApi {
                 mCallback.OnPopularMoviesJsonReceived(json);
         }
     }
+
+    private class GetPopularMoviesJson extends AsyncTask<String, Void, String> {
+
+        private PopularMovies mCallback;
+
+        public GetPopularMoviesJson(@NonNull PopularMovies mCallback) {
+            this.mCallback = mCallback;
+        }
+
+        @Override
+        protected String doInBackground(String... param) {
+            String url = MOVIE_API + param[0];
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String json) {
+            if (json != null)
+                mCallback.OnPopularMoviesJsonReceived(json);
+        }
+    }
 }
