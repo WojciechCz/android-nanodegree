@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by fares on 17.10.15.
  */
-public class Review implements Parcelable {
+public class Trailer implements Parcelable {
 
     @SerializedName("id")   private String mId;
     @SerializedName("iso_639_1") private String mLanguage;
@@ -18,19 +18,19 @@ public class Review implements Parcelable {
     @SerializedName("size") private int mSize;
     @SerializedName("type") private String mType;
 
-    public static final Parcelable.Creator<Review> CREATOR = new Parcelable.Creator<Review>() {
+    public static final Parcelable.Creator<Trailer> CREATOR = new Parcelable.Creator<Trailer>() {
         @Override
-        public Review createFromParcel(Parcel source) {
-            return new Review(source);
+        public Trailer createFromParcel(Parcel source) {
+            return new Trailer(source);
         }
 
         @Override
-        public Review[] newArray(int size) {
-            return new Review[size];
+        public Trailer[] newArray(int size) {
+            return new Trailer[size];
         }
     };
 
-    public Review(Parcel source) {
+    public Trailer(Parcel source) {
         this.mId   = source.readString();
         this.mLanguage  = source.readString();
         this.mKey  = source.readString();
@@ -53,7 +53,7 @@ public class Review implements Parcelable {
 
     @Override
     public String toString() {
-        return "Review{" +
+        return "Trailer{" +
                 "mId='" + mId + '\'' +
                 ", mLanguage='" + mLanguage + '\'' +
                 ", mKey='" + mKey + '\'' +
