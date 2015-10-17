@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMovies;
 import com.example.popularmovies.views.adapters.AdapterMovies;
 import com.example.popularmovies.R;
 import com.example.popularmovies.activities.ActivityMain;
@@ -28,14 +29,14 @@ public class FragmentPopularMovies extends Fragment implements
     public static final String SAVED_INSTANCE_MOVIES = "movies";
 
     private GridView mMoviesGrid;
-//    private AdapterView.OnItemClickListener onMovieClicked;
     private AdapterMovies mAdapterMovies;
     private List<Movie> mMoviesList;
+    private CallbackFragmentPopularMovies mCallback;
 
-    public static Fragment newInstance(@NonNull List<Movie> movies){
+    public static Fragment newInstance(@NonNull List<Movie> movies, CallbackFragmentPopularMovies callback){
         FragmentPopularMovies f = new FragmentPopularMovies();
         f.mMoviesList = movies;
-//        f.onMovieClicked = onMovieClicked;
+        f.mCallback = callback;
         return f;
     }
 
@@ -70,7 +71,7 @@ public class FragmentPopularMovies extends Fragment implements
     }
 
     @Override
-    public void OnPopularMoviesDataSetChange(List<Movie> movieList) {
+    public void onPopularMoviesDataSetChange(List<Movie> movieList) {
         mMoviesList.clear();
         mMoviesList.addAll(movieList);
         mAdapterMovies.notifyDataSetChanged();
@@ -84,7 +85,6 @@ public class FragmentPopularMovies extends Fragment implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ((ActivityMain)getActivity()).setSelectedMovie( (Movie) parent.getAdapter().getItem(position) );
-        ((ActivityMain)getActivity()).openFragment(ActivityMain.FRAGMENT_MOVIE_DETAIL);
+        mCallback.onMovieClicked( (Movie) parent.getAdapter().getItem(position) );
     }
 }

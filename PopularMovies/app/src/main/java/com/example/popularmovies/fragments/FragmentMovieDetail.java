@@ -12,11 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
+import com.example.popularmovies.activities.ActivityMain;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.squareup.picasso.Picasso;
 
-public class FragmentMovieDetail extends Fragment {
+public class FragmentMovieDetail extends Fragment implements ActivityMain.SelectedMovieChange {
 
     public static final String SAVED_INSTANCE_MOVIE = "movie";
     private String sortOrder;
@@ -60,6 +61,12 @@ public class FragmentMovieDetail extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onSelectedMovieChange(Movie movie) {
+        selectedMovie = movie;
+        fillViewsWithData();
+    }
+
     private void fillViewsWithData() {
         if (selectedMovie.getmOriginTitle() != null)
             mMovieDetailsTitle.setText(selectedMovie.getmOriginTitle());
@@ -77,5 +84,4 @@ public class FragmentMovieDetail extends Fragment {
         mMovieDetailsOverview       = (TextView) layout.findViewById(R.id.movieDetailsOverview);
         mMovieDetailsVoteAverage    = (TextView) layout.findViewById(R.id.movieDetailsVoteAverage);
     }
-
 }

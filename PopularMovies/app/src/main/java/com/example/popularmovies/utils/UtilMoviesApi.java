@@ -3,7 +3,6 @@ package com.example.popularmovies.utils;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.example.popularmovies.BuildConfig;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -17,6 +16,7 @@ public class UtilMoviesApi {
 
     private static final String MOVIE_API = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
     private static final String REVIEWS_API = "http://api.themoviedb.org/3/movie/%s/reviews&api_key=";
+    private static final String TRAILERS_API = "http://api.themoviedb.org/3/movie/%s/videos&api_key=";
     public static final String URL_POSTER = "http://image.tmdb.org/t/p/w185";
 
 
@@ -25,11 +25,12 @@ public class UtilMoviesApi {
     }
 
     public void getReviewsJson(@NonNull PopularMovies callback, @NonNull String apiK, @NonNull String movieId){
-        new GetReviewsJson(callback).execute(apiK, movieId);
+        new GetMovieDetails(callback).execute(apiK, movieId);
     }
 
     public interface PopularMovies{
-        void OnPopularMoviesJsonReceived(String json);
+        void onPopularMoviesJsonReceived(String json);
+        void onMovieDetailsReceived(String[] json);
     }
 
     private class GetPopularMoviesJson extends AsyncTask<String, Void, String> {
@@ -60,31 +61,36 @@ public class UtilMoviesApi {
         @Override
         protected void onPostExecute(String json) {
             if (json != null)
-                mCallback.OnPopularMoviesJsonReceived(json);
+                mCallback.onPopularMoviesJsonReceived(json);
         }
     }
 
-    private class GetReviewsJson extends AsyncTask<String, Void, String> {
+    private class GetMovieDetails extends AsyncTask<String, Void, String[]> {
 
         private PopularMovies mCallback;
 
-        public GetReviewsJson(@NonNull PopularMovies mCallback) {
+        public GetMovieDetails(@NonNull PopularMovies mCallback) {
             this.mCallback = mCallback;
         }
 
         @Override
-        protected String doInBackground(String... param) {
+        protected String[] doInBackground(String... param) {
             String movieId = param[1];
-            String finalUrl = String.format(REVIEWS_API, movieId) + param[0];
+            String finalUrlReviews = String.format(REVIEWS_API, movieId) + param[0];
+            String finalUrlTrailers = String.format(TRAILERS_API, movieId) + param[0];
 
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(finalUrl)
+            Request requestReviews = new Request.Builder()
+                    .url(finalUrlReviews)
+                    .build();
+            Request requestTrailers = new Request.Builder()
+                    .url(finalUrlTrailers)
                     .build();
 
             try {
-                Response response = client.newCall(request).execute();
-                return response.body().string();
+                Response responseReviews = client.newCall(requestReviews).execute();
+                Response responseTrailers = client.newCall(requestTrailers).execute();
+                return new String[] { responseReviews.body().string(), responseTrailers.body().string() };
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -92,9 +98,9 @@ public class UtilMoviesApi {
         }
 
         @Override
-        protected void onPostExecute(String json) {
-            if (json != null)
-                mCallback.OnPopularMoviesJsonReceived(json);
+        protected void onPostExecute(String[] jsons) {
+            if (jsons != null)
+                mCallback.onMovieDetailsReceived(jsons);
         }
     }
 }

@@ -19,14 +19,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.popularmovies.fragments.FragmentMovieDetail;
 import com.example.popularmovies.fragments.FragmentPopularMovies;
 import com.example.popularmovies.R;
+import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMovies;
 import com.example.popularmovies.models.Movie;
+import com.example.popularmovies.models.Review;
+import com.example.popularmovies.models.Trailer;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
 import com.google.gson.JsonParseException;
@@ -41,7 +43,8 @@ import java.util.List;
 /**
  * Created by fares on 07.06.15.
  */
-public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.PopularMovies {
+public class ActivityMain extends AppCompatActivity implements
+        UtilMoviesApi.PopularMovies, CallbackFragmentPopularMovies {
 
     public static final String LOG_DEBUG = "saarna";
 
@@ -63,13 +66,18 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     private Toolbar toolbar;
     private ImageView collapsingToolbarImage;
     private boolean collapsingToolbarImageVisible;
+    private boolean mTwoPane;
 
     private List<Movie> movies;
     private Movie selectedMovie;
+    private List<Review> mSelectedMovieReviews;
+    private List<Trailer> mSelectedMovieTrailers;
 
     private int sortOrder;
 
+
     private PopularMoviesDataSetChange mDataSetChange;
+    private SelectedMovieChange mSelectedMovieChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,18 +89,26 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         // default display order
         setSortOrderFromPrefs();
 
+        FragmentPopularMovies fpm = (FragmentPopularMovies) getSupportFragmentManager().findFragmentById(R.id.mainScreenFragmentPopularMovies);
 
-        if (savedInstanceState != null) {
-            activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
-            selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
-            if (movies == null || movies.isEmpty())
-                movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
-//            mDataSetChange = (FragmentPopularMovies) getSupportFragmentManager().getFragment(savedInstanceState, SAVED_INSTANCE_FRAGMENT);
-            if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
-                toolbarImageShow();
-        }
-        else {
-            openFragment(FRAGMENT_POPULAR_MOVIES);
+        // show TwoPane layout if there is popular movies fragment present
+        if (fpm != null) {
+
+            if (savedInstanceState != null) {
+                activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
+                selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
+                if (movies == null || movies.isEmpty())
+                    movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
+                if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
+                    toolbarImageShow();
+            }
+            else {
+                // set callback popular movies and start download movies
+                mDataSetChange = fpm;
+                downloadMovies();
+                // open detail
+                openFragment(FRAGMENT_MOVIE_DETAIL);
+            }
         }
     }
 
@@ -122,6 +138,14 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         setSortOrderFromPrefs();
         changeSortOrderAndSort();
     }
+
+    // ------------- Fragment callbacks ------------------
+    @Override
+    public void onMovieClicked(Movie m) {
+        selectedMovie = m;
+        openFragment(FRAGMENT_MOVIE_DETAIL);
+    }
+    // ------------- ------------------ -------------
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -155,7 +179,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                         return 0;
                     }
                 });
-                mDataSetChange.OnPopularMoviesDataSetChange(movies);
+                mDataSetChange.onPopularMoviesDataSetChange(movies);
             } else if (sortOrder == MOVIES_SORT_RATED) {
                 Collections.sort(movies, new Comparator<Movie>() {
                     public int compare(Movie one, Movie two) {
@@ -167,7 +191,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                         return 0;
                     }
                 });
-                mDataSetChange.OnPopularMoviesDataSetChange(movies);
+                mDataSetChange.onPopularMoviesDataSetChange(movies);
             }
         }
     }
@@ -235,13 +259,14 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         }
     }
 
+    @Nullable
     private Fragment getFragment(int fragmentType) {
         Fragment frag;
         switch (fragmentType) {
             case FRAGMENT_POPULAR_MOVIES:
                 if (movies == null)
                     movies = new LinkedList<>();
-                frag = FragmentPopularMovies.newInstance(movies);
+                frag = FragmentPopularMovies.newInstance(movies, this);
                 mDataSetChange = (FragmentPopularMovies) frag;
                 return frag;
             case FRAGMENT_MOVIE_DETAIL:
@@ -252,10 +277,6 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
                 break;
         }
         return null;
-    }
-
-    public void setSelectedMovie(Movie movie){
-        this.selectedMovie = movie;
     }
 
     @Override
@@ -273,7 +294,7 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     }
 
     @Override
-    public void OnPopularMoviesJsonReceived(String json) {
+    public void onPopularMoviesJsonReceived(String json) {
         UtilParser movieParser = new UtilParser();
 
         try {
@@ -283,17 +304,49 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         }
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
-//        if (movies != null)
-//            for (Movie m : movies)
-//                Log.d(LOG_DEBUG, m.toString());
 
+        updateData();
+    }
+
+    @Override
+    public void onMovieDetailsReceived(String[] jsons) {
+        try {
+            mSelectedMovieReviews = new UtilParser().jsonParserReviews(jsons[0]);
+            mSelectedMovieTrailers = new UtilParser().jsonParserTrailers(jsons[1]);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
+        updateMovieDetails();
+    }
+
+    private void updateData(){
         if (movies != null && mDataSetChange != null){
-            mDataSetChange.OnPopularMoviesDataSetChange(movies);
+
+            // for movie detail in tablet layout
+            if (mTwoPane){
+                updateMovieDetails();
+            }
+            // for movie list
+            mDataSetChange.onPopularMoviesDataSetChange(movies);
             changeSortOrderAndSort();
         }
     }
 
+    private void updateMovieDetails(){
+        if (!movies.isEmpty()) {
+            selectedMovie = movies.get(0);
+            if (mSelectedMovieChange != null)
+                mSelectedMovieChange.onSelectedMovieChange(selectedMovie);
+        }
+    }
+
+
     public interface PopularMoviesDataSetChange {
-        void OnPopularMoviesDataSetChange(List<Movie> movieList);
+        void onPopularMoviesDataSetChange(List<Movie> movieList);
+    }
+    public interface SelectedMovieChange {
+        void onSelectedMovieChange(Movie movie);
     }
 }

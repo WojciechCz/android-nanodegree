@@ -12,9 +12,12 @@
         <item name="android:background">?attr/colorPrimary</item>
         <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
-    <style name="MainScreenFragmentContainer">
+    <style name="MainScreenFragmentsParent">
         <item name="android:layout_marginTop">?attr/actionBarSize</item>
     </style>
+    <style name="MainScreenFragmentContainer">
+    </style>
+
 
     <style name="PopularMoviesFragment">
         <item name="android:background">@color/ColorBackground</item>
