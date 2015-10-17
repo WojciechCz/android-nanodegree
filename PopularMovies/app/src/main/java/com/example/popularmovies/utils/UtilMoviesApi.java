@@ -16,11 +16,16 @@ import java.io.IOException;
 public class UtilMoviesApi {
 
     private static final String MOVIE_API = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
+    private static final String REVIEWS_API = "http://api.themoviedb.org/3/movie/%s/reviews&api_key=";
     public static final String URL_POSTER = "http://image.tmdb.org/t/p/w185";
 
 
-    public void getPopularMoviesJson(@NonNull PopularMovies callback, String apiK){
-    new GetPopularMoviesJson(callback).execute(apiK);
+    public void getPopularMoviesJson(@NonNull PopularMovies callback, @NonNull String apiK){
+        new GetPopularMoviesJson(callback).execute(apiK);
+    }
+
+    public void getReviewsJson(@NonNull PopularMovies callback, @NonNull String apiK, @NonNull String movieId){
+        new GetReviewsJson(callback).execute(apiK, movieId);
     }
 
     public interface PopularMovies{
@@ -59,20 +64,22 @@ public class UtilMoviesApi {
         }
     }
 
-    private class GetPopularMoviesJson extends AsyncTask<String, Void, String> {
+    private class GetReviewsJson extends AsyncTask<String, Void, String> {
 
         private PopularMovies mCallback;
 
-        public GetPopularMoviesJson(@NonNull PopularMovies mCallback) {
+        public GetReviewsJson(@NonNull PopularMovies mCallback) {
             this.mCallback = mCallback;
         }
 
         @Override
         protected String doInBackground(String... param) {
-            String url = MOVIE_API + param[0];
+            String movieId = param[1];
+            String finalUrl = String.format(REVIEWS_API, movieId) + param[0];
+
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(url)
+                    .url(finalUrl)
                     .build();
 
             try {

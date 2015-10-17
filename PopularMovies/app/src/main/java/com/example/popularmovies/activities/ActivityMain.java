@@ -208,8 +208,10 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
     }
 
     private void downloadMovies() {
-        UtilMoviesApi utilMoviesApi = new UtilMoviesApi();
-        utilMoviesApi.getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY));
+        new UtilMoviesApi().getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY));
+    }
+    private void downloadReviews(String movieId) {
+        new UtilMoviesApi().getReviewsJson(this, getString(R.string.MOVIE_API_KEY), movieId);
     }
 
     private void setUpToolbar() {
@@ -256,10 +258,6 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
         this.selectedMovie = movie;
     }
 
-    public interface PopularMoviesDataSetChange {
-        void OnPopularMoviesDataSetChange(List<Movie> movieList);
-    }
-
     @Override
     public void onBackPressed() {
         if (activeFragment == FRAGMENT_POPULAR_MOVIES) {
@@ -293,5 +291,9 @@ public class ActivityMain extends AppCompatActivity implements UtilMoviesApi.Pop
             mDataSetChange.OnPopularMoviesDataSetChange(movies);
             changeSortOrderAndSort();
         }
+    }
+
+    public interface PopularMoviesDataSetChange {
+        void OnPopularMoviesDataSetChange(List<Movie> movieList);
     }
 }
