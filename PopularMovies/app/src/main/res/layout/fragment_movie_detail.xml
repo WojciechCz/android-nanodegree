@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     >
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,50 +13,72 @@
             style="@style/MovieDetails"
             >
 
-            <TextView
-                android:id="@+id/movieDetailsTitleLabel"
-                style="@style/MovieDetails.TitleLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/movieDetailsTitle"
-                style="@style/MovieDetails.Title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                style="@style/MovieDetails.Description"
+                >
 
-            <TextView
-                android:id="@+id/movieDetailsReleaseDateLabel"
-                style="@style/MovieDetails.ReleaseDateLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/movieDetailsReleaseDate"
-                style="@style/MovieDetails.ReleaseDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsTitleLabel"
+                    style="@style/MovieDetails.TitleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsTitle"
+                    style="@style/MovieDetails.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/movieDetailsVoteAverageLabel"
-                style="@style/MovieDetails.VoteAverageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/movieDetailsVoteAverage"
-                style="@style/MovieDetails.VoteAverage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsReleaseDateLabel"
+                    style="@style/MovieDetails.ReleaseDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsReleaseDate"
+                    style="@style/MovieDetails.ReleaseDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/movieDetailsOverviewLabel"
-                style="@style/MovieDetails.OverviewLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/movieDetailsOverview"
-                style="@style/MovieDetails.Overview"
+                <TextView
+                    android:id="@+id/movieDetailsVoteAverageLabel"
+                    style="@style/MovieDetails.VoteAverageLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsVoteAverage"
+                    style="@style/MovieDetails.VoteAverage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/movieDetailsOverviewLabel"
+                    style="@style/MovieDetails.OverviewLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/movieDetailsOverview"
+                    style="@style/MovieDetails.Overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/movieDetailsReviews"
+                style="@style/MovieDetails.Reviews"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/movieDetailsTrailers"
+                style="@style/MovieDetails.Trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-</LinearLayout>

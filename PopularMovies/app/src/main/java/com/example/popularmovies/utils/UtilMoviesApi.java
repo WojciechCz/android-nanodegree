@@ -15,8 +15,8 @@ import java.io.IOException;
 public class UtilMoviesApi {
 
     private static final String MOVIE_API = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
-    private static final String REVIEWS_API = "http://api.themoviedb.org/3/movie/%s/reviews&api_key=";
-    private static final String TRAILERS_API = "http://api.themoviedb.org/3/movie/%s/videos&api_key=";
+    private static final String REVIEWS_API = "http://api.themoviedb.org/3/movie/%s/reviews?api_key=";
+    private static final String TRAILERS_API = "http://api.themoviedb.org/3/movie/%s/videos?api_key=";
     public static final String URL_POSTER = "http://image.tmdb.org/t/p/w185";
 
 
@@ -24,7 +24,7 @@ public class UtilMoviesApi {
         new GetPopularMoviesJson(callback).execute(apiK);
     }
 
-    public void getReviewsJson(@NonNull PopularMovies callback, @NonNull String apiK, @NonNull String movieId){
+    public void getDetailsJson(@NonNull PopularMovies callback, @NonNull String apiK, @NonNull String movieId){
         new GetMovieDetails(callback).execute(apiK, movieId);
     }
 

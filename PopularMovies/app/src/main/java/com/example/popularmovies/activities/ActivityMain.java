@@ -105,10 +105,15 @@ public class ActivityMain extends AppCompatActivity implements
             else {
                 // set callback popular movies and start download movies
                 mDataSetChange = fpm;
-                downloadMovies();
                 // open detail
                 openFragment(FRAGMENT_MOVIE_DETAIL);
+                downloadMovies();
             }
+        }
+        // one pane layout
+        else {
+            openFragment(FRAGMENT_POPULAR_MOVIES);
+            downloadMovies();
         }
     }
 
@@ -143,7 +148,8 @@ public class ActivityMain extends AppCompatActivity implements
     @Override
     public void onMovieClicked(Movie m) {
         selectedMovie = m;
-        openFragment(FRAGMENT_MOVIE_DETAIL);
+        downloadMovieDetails(String.valueOf(m.getmId()));
+//        updateMovieDetails();
     }
     // ------------- ------------------ -------------
 
@@ -216,7 +222,7 @@ public class ActivityMain extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-            getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -234,8 +240,8 @@ public class ActivityMain extends AppCompatActivity implements
     private void downloadMovies() {
         new UtilMoviesApi().getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY));
     }
-    private void downloadReviews(String movieId) {
-        new UtilMoviesApi().getReviewsJson(this, getString(R.string.MOVIE_API_KEY), movieId);
+    private void downloadMovieDetails(String movieId) {
+        new UtilMoviesApi().getDetailsJson(this, getString(R.string.MOVIE_API_KEY), movieId);
     }
 
     private void setUpToolbar() {
@@ -271,7 +277,9 @@ public class ActivityMain extends AppCompatActivity implements
                 return frag;
             case FRAGMENT_MOVIE_DETAIL:
                 toolbarImageShow();
-                return FragmentMovieDetail.newInstance(selectedMovie);
+                frag = FragmentMovieDetail.newInstance(selectedMovie);
+                mSelectedMovieChange = (FragmentMovieDetail) frag;
+                return frag;
             default:
                 Log.d("test", "I cant find fragment to open");
                 break;
@@ -293,6 +301,8 @@ public class ActivityMain extends AppCompatActivity implements
         }
     }
 
+
+    // ---------------- HTTP REQUEST RESULT ----------------
     @Override
     public void onPopularMoviesJsonReceived(String json) {
         UtilParser movieParser = new UtilParser();
@@ -318,8 +328,10 @@ public class ActivityMain extends AppCompatActivity implements
         }
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
+        openFragment(FRAGMENT_MOVIE_DETAIL);
         updateMovieDetails();
     }
+    // ---------------- HTTP REQUEST RESULT ----------------
 
     private void updateData(){
         if (movies != null && mDataSetChange != null){
@@ -338,7 +350,7 @@ public class ActivityMain extends AppCompatActivity implements
         if (!movies.isEmpty()) {
             selectedMovie = movies.get(0);
             if (mSelectedMovieChange != null)
-                mSelectedMovieChange.onSelectedMovieChange(selectedMovie);
+                mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
         }
     }
 
@@ -347,6 +359,6 @@ public class ActivityMain extends AppCompatActivity implements
         void onPopularMoviesDataSetChange(List<Movie> movieList);
     }
     public interface SelectedMovieChange {
-        void onSelectedMovieChange(Movie movie);
+        void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers);
     }
 }

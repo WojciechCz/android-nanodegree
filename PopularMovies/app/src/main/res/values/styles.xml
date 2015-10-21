@@ -73,6 +73,11 @@
         <item name="android:text">@string/OverviewLabel</item>
     </style>
     <style name="MovieDetails.Overview" parent="MovieDetailTextView"></style>
+    <style name="MovieDetails.Description"></style>
+    <style name="MovieDetails.Reviews"></style>
+    <style name="MovieDetails.Reviews.Author"></style>
+    <style name="MovieDetails.Reviews.Content"></style>
+    <style name="MovieDetails.Trailers"></style>
 
 
 </resources>
