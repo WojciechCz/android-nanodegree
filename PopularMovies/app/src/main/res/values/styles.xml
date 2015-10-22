@@ -55,7 +55,9 @@
     <!-- FRAGMENT MOVIE DETAIL -->
     <style name="MovieDetails">
         <item name="android:layout_marginLeft">25dp</item>
-        <item name="android:paddingTop">@dimen/detail_backdrop_height</item>
+    </style>
+    <style name="MovieDetails.Description">
+        <item name="android:layout_marginTop">@dimen/detail_backdrop_height</item>
     </style>
     <style name="MovieDetails.TitleLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/TitleLabel</item>
@@ -73,11 +75,13 @@
         <item name="android:text">@string/OverviewLabel</item>
     </style>
     <style name="MovieDetails.Overview" parent="MovieDetailTextView"></style>
-    <style name="MovieDetails.Description"></style>
     <style name="MovieDetails.Reviews"></style>
     <style name="MovieDetails.Reviews.Author"></style>
     <style name="MovieDetails.Reviews.Content"></style>
     <style name="MovieDetails.Trailers"></style>
+
+    <style name="MovieDetails.Trailers.Name"></style>
+
 
 
 </resources>

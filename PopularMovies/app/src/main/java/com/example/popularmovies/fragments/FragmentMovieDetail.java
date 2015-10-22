@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
 import com.example.popularmovies.utils.UtilMoviesApi;
+import com.example.popularmovies.views.adapters.AdapterReviews;
+import com.example.popularmovies.views.adapters.AdapterTrailers;
+import com.example.popularmovies.views.layouts.WrappingLinearLayoutManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -64,6 +68,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
         linkViews(layout);
         fillViewsWithData();
+        setUpLists();
 
         return layout;
     }
@@ -81,12 +86,31 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         mSelectedMovieReviews.addAll(reviews);
         mSelectedMovieTrailers.addAll(trailers);
         if (isViewsLinked()) {
+            setUpLists();
             fillViewsWithData();
+
+
+            if (mListReviews != null && mListReviews.getAdapter() != null)
+                ((AdapterReviews)mListReviews.getAdapter()).updateList(mSelectedMovieReviews);
+            if (mListTrailers != null && mListTrailers.getAdapter() != null)
+                ((AdapterTrailers)mListTrailers.getAdapter()).updateList(mSelectedMovieTrailers);
         }
     }
 
     private void setUpLists(){
-
+        if (mListReviews != null) {
+            mListReviews.setLayoutManager(new WrappingLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+//            mListReviews.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+            mListReviews.setNestedScrollingEnabled(false);
+            mListReviews.setHasFixedSize(false);
+            mListReviews.setAdapter(new AdapterReviews(mSelectedMovieReviews));
+        }
+        if (mListTrailers != null) {
+            mListTrailers.setLayoutManager(new WrappingLinearLayoutManager(getContext()));
+            mListTrailers.setNestedScrollingEnabled(false);
+            mListTrailers.setHasFixedSize(false);
+            mListTrailers.setAdapter(new AdapterTrailers(mSelectedMovieTrailers));
+        }
     }
 
     private void fillViewsWithData() {

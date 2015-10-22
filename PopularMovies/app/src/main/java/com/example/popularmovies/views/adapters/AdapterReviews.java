@@ -38,6 +38,13 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.Holder> 
         return mListReviews.size();
     }
 
+    public void updateList(List<Review> reviews){
+        if (mListReviews != null){
+            mListReviews.clear();
+            mListReviews.addAll(reviews);
+        }
+    }
+
     protected class Holder extends RecyclerView.ViewHolder {
 
         private final TextView mAuthor;
