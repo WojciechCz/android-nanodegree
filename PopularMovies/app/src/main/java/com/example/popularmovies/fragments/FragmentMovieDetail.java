@@ -1,16 +1,12 @@
 package com.example.popularmovies.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
@@ -18,11 +14,9 @@ import com.example.popularmovies.activities.ActivityMain;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
-import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.views.adapters.AdapterReviews;
 import com.example.popularmovies.views.adapters.AdapterTrailers;
 import com.example.popularmovies.views.layouts.WrappingLinearLayoutManager;
-import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -4,14 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    style="@style/MovieDetailsTrailersItem"
     >
+
+    <ImageView
+        android:id="@+id/listItemTrailerIcon"
+        style="@style/MovieDetailsTrailersIcon"
+        android:layout_width="@dimen/list_trailer_play_icon_width"
+        android:layout_height="@dimen/list_trailer_play_icon_height"
+        />
 
     <TextView
         android:id="@+id/listItemTrailerName"
-        style="@style/MovieDetails.Trailers.Name"
+        style="@style/MovieDetailsTrailersName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
-
 
 </LinearLayout>

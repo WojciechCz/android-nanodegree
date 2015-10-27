@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="MovieDetails.Trailers.Name">15dp</dimen>
+
+    <dimen name="detail_backdrop_height">220dp</dimen>
     <dimen name="fragment_movie_detail_divider_height">2dp</dimen>
+
+    <dimen name="list_trailer_play_icon_width">40dp</dimen>
+    <dimen name="list_trailer_play_icon_height">40dp</dimen>
+
+    <dimen name="list_trailer_divider_height">8dp</dimen>
+    <dimen name="list_review_divider_height">8dp</dimen>
+
 </resources>

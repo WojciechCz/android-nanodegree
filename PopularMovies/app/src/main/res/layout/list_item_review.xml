@@ -4,18 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    style="@style/MovieDetailsReviewsItem"
     >
 
     <TextView
         android:id="@+id/listItemReviewAuthor"
-        style="@style/MovieDetails.Reviews.Author"
+        style="@style/MovieDetailsReviewsAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
 
     <TextView
         android:id="@+id/listItemReviewContent"
-        style="@style/MovieDetails.Reviews.Content"
+        style="@style/MovieDetailsReviewsContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

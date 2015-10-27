@@ -17,50 +17,50 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                style="@style/MovieDetails.Description"
+                style="@style/MovieDetailsDescription"
                 >
 
                 <TextView
                     android:id="@+id/movieDetailsTitleLabel"
-                    style="@style/MovieDetails.TitleLabel"
+                    style="@style/MovieDetailsTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/movieDetailsTitle"
-                    style="@style/MovieDetails.Title"
+                    style="@style/MovieDetailsTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieDetailsReleaseDateLabel"
-                    style="@style/MovieDetails.ReleaseDateLabel"
+                    style="@style/MovieDetailsReleaseDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/movieDetailsReleaseDate"
-                    style="@style/MovieDetails.ReleaseDate"
+                    style="@style/MovieDetailsReleaseDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieDetailsVoteAverageLabel"
-                    style="@style/MovieDetails.VoteAverageLabel"
+                    style="@style/MovieDetailsVoteAverageLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/movieDetailsVoteAverage"
-                    style="@style/MovieDetails.VoteAverage"
+                    style="@style/MovieDetailsVoteAverage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/movieDetailsOverviewLabel"
-                    style="@style/MovieDetails.OverviewLabel"
+                    style="@style/MovieDetailsOverviewLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/movieDetailsOverview"
-                    style="@style/MovieDetails.Overview"
+                    style="@style/MovieDetailsOverview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -74,14 +74,14 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/movieDetailsReviews"
-                style="@style/MovieDetails.Reviews"
+                style="@style/MovieDetailsReviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/movieDetailsTrailers"
-                style="@style/MovieDetails.Trailers"
+                style="@style/MovieDetailsTrailers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />

@@ -56,31 +56,44 @@
     <style name="MovieDetails">
         <item name="android:layout_marginLeft">25dp</item>
     </style>
-    <style name="MovieDetails.Description">
+    <style name="MovieDetailsDescription">
         <item name="android:layout_marginTop">@dimen/detail_backdrop_height</item>
     </style>
-    <style name="MovieDetails.TitleLabel" parent="MovieDetailTextViewLabel">
+    <style name="MovieDetailsTitleLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/TitleLabel</item>
     </style>
-    <style name="MovieDetails.Title" parent="MovieDetailTextView"></style>
-    <style name="MovieDetails.ReleaseDateLabel" parent="MovieDetailTextViewLabel">
+    <style name="MovieDetailsTitle" parent="MovieDetailTextView"></style>
+    <style name="MovieDetailsReleaseDateLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/ReleaseDateLabel</item>
     </style>
-    <style name="MovieDetails.ReleaseDate" parent="MovieDetailTextView"></style>
-    <style name="MovieDetails.VoteAverageLabel" parent="MovieDetailTextViewLabel">
+    <style name="MovieDetailsReleaseDate" parent="MovieDetailTextView"></style>
+    <style name="MovieDetailsVoteAverageLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/VoteAverageLabel</item>
     </style>
-    <style name="MovieDetails.VoteAverage" parent="MovieDetailTextView"></style>
-    <style name="MovieDetails.OverviewLabel" parent="MovieDetailTextViewLabel">
+    <style name="MovieDetailsVoteAverage" parent="MovieDetailTextView"></style>
+    <style name="MovieDetailsOverviewLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/OverviewLabel</item>
     </style>
-    <style name="MovieDetails.Overview" parent="MovieDetailTextView"></style>
-    <style name="MovieDetails.Reviews"></style>
-    <style name="MovieDetails.Reviews.Author"></style>
-    <style name="MovieDetails.Reviews.Content"></style>
-    <style name="MovieDetails.Trailers"></style>
+    <style name="MovieDetailsOverview" parent="MovieDetailTextView"></style>
 
-    <style name="MovieDetails.Trailers.Name"></style>
+    <style name="MovieDetailsReviews"></style>
+    <style name="MovieDetailsReviewsItem"></style>
+    <style name="MovieDetailsReviewsAuthor"></style>
+    <style name="MovieDetailsReviewsContent"></style>
+
+    <style name="MovieDetailsTrailers"></style>
+    <style name="MovieDetailsTrailersItem">
+        <item name="android:paddingTop">@dimen/list_trailer_divider_height</item>
+        <item name="android:paddingBottom">@dimen/list_trailer_divider_height</item>
+    </style>
+    <style name="MovieDetailsTrailersName">
+        <item name="android:layout_marginLeft">@dimen/MovieDetails.Trailers.Name</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="MovieDetailsTrailersIcon">
+        <item name="android:src">@mipmap/app_play_arrow</item>
+    </style>
+
 
 
 
