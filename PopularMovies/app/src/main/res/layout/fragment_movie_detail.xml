@@ -66,10 +66,15 @@
 
             </LinearLayout>
 
+            <TextView
+                style="@style/MovieDetailsReviewsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/fragment_movie_detail_divider_height"
-                android:background="@color/ColorPrimary"
+                android:background="@color/ColorDividerLight"
                 />
 
             <android.support.v7.widget.RecyclerView
@@ -77,6 +82,17 @@
                 style="@style/MovieDetailsReviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                />
+
+            <TextView
+                style="@style/MovieDetailsTrailersHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fragment_movie_detail_divider_height"
+                android:background="@color/ColorDividerLight"
                 />
 
             <android.support.v7.widget.RecyclerView

@@ -3,21 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     style="@style/MovieDetailsReviewsItem"
     >
 
     <TextView
         android:id="@+id/listItemReviewAuthor"
         style="@style/MovieDetailsReviewsAuthor"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 
     <TextView
         android:id="@+id/listItemReviewContent"
         style="@style/MovieDetailsReviewsContent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 

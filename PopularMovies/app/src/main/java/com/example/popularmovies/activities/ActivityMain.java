@@ -1,11 +1,13 @@
 package com.example.popularmovies.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.example.popularmovies.fragments.FragmentMovieDetail;
 import com.example.popularmovies.fragments.FragmentPopularMovies;
 import com.example.popularmovies.R;
+import com.example.popularmovies.fragments.interfaces.CallbackFragmentMovieDetails;
 import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMovies;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
@@ -44,7 +47,7 @@ import java.util.List;
  * Created by fares on 07.06.15.
  */
 public class ActivityMain extends AppCompatActivity implements
-        UtilMoviesApi.PopularMovies, CallbackFragmentPopularMovies {
+        UtilMoviesApi.PopularMovies, CallbackFragmentPopularMovies, CallbackFragmentMovieDetails {
 
     public static final String LOG_DEBUG = "saarna";
 
@@ -151,7 +154,19 @@ public class ActivityMain extends AppCompatActivity implements
         downloadMovieDetails(String.valueOf(m.getmId()));
 //        updateMovieDetails();
     }
+    @Override
+    public void onTrailerClicked(String youtubeVideoID) {
+        watchYoutubeVideo(youtubeVideoID);
+    }
     // ------------- ------------------ -------------
+    public void watchYoutubeVideo(String videoID){
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" +videoID)));
+        }
+        catch (ActivityNotFoundException e){
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoID)));
+        }
+    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -277,7 +292,7 @@ public class ActivityMain extends AppCompatActivity implements
                 return frag;
             case FRAGMENT_MOVIE_DETAIL:
                 toolbarImageShow();
-                frag = FragmentMovieDetail.newInstance(selectedMovie);
+                frag = FragmentMovieDetail.newInstance(selectedMovie, this);
                 mSelectedMovieChange = (FragmentMovieDetail) frag;
                 return frag;
             default:

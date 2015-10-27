@@ -76,11 +76,21 @@
     </style>
     <style name="MovieDetailsOverview" parent="MovieDetailTextView"></style>
 
+    <style name="MovieDetailsReviewsHeader">
+        <item name="android:text">@string/MovieDetailsReviewsHeader</item>
+        <item name="android:padding">@dimen/MovieDetailsReviewsHeaderPadding</item>
+    </style>
     <style name="MovieDetailsReviews"></style>
     <style name="MovieDetailsReviewsItem"></style>
-    <style name="MovieDetailsReviewsAuthor"></style>
+    <style name="MovieDetailsReviewsAuthor">
+        <item name="android:textStyle">bold</item>
+    </style>
     <style name="MovieDetailsReviewsContent"></style>
 
+    <style name="MovieDetailsTrailersHeader">
+        <item name="android:text">@string/MovieDetailsTrailersHeader</item>
+        <item name="android:padding">@dimen/MovieDetailsTrailersHeaderPadding</item>
+    </style>
     <style name="MovieDetailsTrailers"></style>
     <style name="MovieDetailsTrailersItem">
         <item name="android:paddingTop">@dimen/list_trailer_divider_height</item>

@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.example.popularmovies.R;
 import com.example.popularmovies.activities.ActivityMain;
+import com.example.popularmovies.fragments.interfaces.CallbackFragmentMovieDetails;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
+import com.example.popularmovies.utils.ItemClickSupport;
 import com.example.popularmovies.views.adapters.AdapterReviews;
 import com.example.popularmovies.views.adapters.AdapterTrailers;
 import com.example.popularmovies.views.layouts.WrappingLinearLayoutManager;
@@ -21,7 +23,7 @@ import com.example.popularmovies.views.layouts.WrappingLinearLayoutManager;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FragmentMovieDetail extends Fragment implements ActivityMain.SelectedMovieChange {
+public class FragmentMovieDetail extends Fragment implements ActivityMain.SelectedMovieChange, ItemClickSupport.OnItemClickListener {
 
     public static final String SAVED_INSTANCE_MOVIE = "movie";
     private String sortOrder;
@@ -37,11 +39,14 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     private RecyclerView mListReviews;
     private RecyclerView mListTrailers;
 
-    public static FragmentMovieDetail newInstance(Movie selectedMovie) {
+    private CallbackFragmentMovieDetails mCallback;
+
+    public static FragmentMovieDetail newInstance(Movie selectedMovie, CallbackFragmentMovieDetails callback) {
         FragmentMovieDetail fragment = new FragmentMovieDetail();
         fragment.selectedMovie = selectedMovie;
         fragment.mSelectedMovieReviews = new LinkedList<>();
         fragment.mSelectedMovieTrailers = new LinkedList<>();
+        fragment.mCallback = callback;
         return fragment;
     }
 
@@ -98,12 +103,14 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
             mListReviews.setNestedScrollingEnabled(false);
             mListReviews.setHasFixedSize(false);
             mListReviews.setAdapter(new AdapterReviews(mSelectedMovieReviews));
+            ItemClickSupport.addTo(mListReviews).setOnItemClickListener(this);
         }
         if (mListTrailers != null) {
             mListTrailers.setLayoutManager(new WrappingLinearLayoutManager(getContext()));
             mListTrailers.setNestedScrollingEnabled(false);
             mListTrailers.setHasFixedSize(false);
             mListTrailers.setAdapter(new AdapterTrailers(mSelectedMovieTrailers));
+            ItemClickSupport.addTo(mListTrailers).setOnItemClickListener(this);
         }
     }
 
@@ -129,5 +136,15 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
     private boolean isViewsLinked(){
         return (mMovieDetailsTitle != null) && (mMovieDetailsReleaseDate != null) && (mMovieDetailsOverview != null) && (mMovieDetailsVoteAverage != null);
+    }
+
+    @Override
+    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+       if (recyclerView.getId() == R.id.movieDetailsReviews) {
+
+       }
+       if (recyclerView.getId() == R.id.movieDetailsTrailers) {
+           mCallback.onTrailerClicked(mSelectedMovieTrailers.get(position).getKey());
+       }
     }
 }
