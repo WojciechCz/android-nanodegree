@@ -18,6 +18,7 @@ import com.example.popularmovies.activities.ActivityMain;
 import com.example.popularmovies.models.Movie;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,6 +54,8 @@ public class FragmentPopularMovies extends Fragment implements
 
         if (savedInstanceState != null)
             mMoviesList = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
+        if (mMoviesList == null)
+            mMoviesList = new LinkedList<>();
 
         linkedViews(layout);
         setUpMovieGrid();
@@ -86,5 +89,9 @@ public class FragmentPopularMovies extends Fragment implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mCallback.onMovieClicked( (Movie) parent.getAdapter().getItem(position) );
+    }
+
+    public void setCallback(CallbackFragmentPopularMovies mCallback) {
+        this.mCallback = mCallback;
     }
 }

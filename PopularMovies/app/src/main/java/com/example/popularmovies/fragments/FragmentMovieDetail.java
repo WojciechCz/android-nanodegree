@@ -115,14 +115,16 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     }
 
     private void fillViewsWithData() {
-        if (selectedMovie.getmOriginTitle() != null)
-            mMovieDetailsTitle.setText(selectedMovie.getmOriginTitle());
-        if (selectedMovie.getmReleaseDate() != null)
-            mMovieDetailsReleaseDate .setText(selectedMovie.getmReleaseDate());
-        if (selectedMovie.getmOverview() != null)
-            mMovieDetailsOverview.setText(selectedMovie.getmOverview());
+        if (selectedMovie != null) {
+            if (selectedMovie.getmOriginTitle() != null)
+                mMovieDetailsTitle.setText(selectedMovie.getmOriginTitle());
+            if (selectedMovie.getmReleaseDate() != null)
+                mMovieDetailsReleaseDate.setText(selectedMovie.getmReleaseDate());
+            if (selectedMovie.getmOverview() != null)
+                mMovieDetailsOverview.setText(selectedMovie.getmOverview());
 
-        mMovieDetailsVoteAverage.setText(String.valueOf(selectedMovie.getmVoteAverage()));
+            mMovieDetailsVoteAverage.setText(String.valueOf(selectedMovie.getmVoteAverage()));
+        }
     }
 
     private void linkViews(View layout) {

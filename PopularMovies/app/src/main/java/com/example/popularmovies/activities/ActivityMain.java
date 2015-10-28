@@ -106,6 +106,7 @@ public class ActivityMain extends AppCompatActivity implements
                     toolbarImageShow();
             }
             else {
+                fpm.setCallback(this);
                 // set callback popular movies and start download movies
                 mDataSetChange = fpm;
                 // open detail
@@ -343,7 +344,12 @@ public class ActivityMain extends AppCompatActivity implements
         }
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
-        openFragment(FRAGMENT_MOVIE_DETAIL);
+        if (mTwoPane){
+
+        }
+        else {
+            openFragment(FRAGMENT_MOVIE_DETAIL);
+        }
         updateMovieDetails();
     }
     // ---------------- HTTP REQUEST RESULT ----------------
