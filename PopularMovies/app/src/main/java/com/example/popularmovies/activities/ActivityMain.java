@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -153,7 +156,7 @@ public class ActivityMain extends AppCompatActivity implements
     public void onMovieClicked(Movie m) {
         selectedMovie = m;
         downloadMovieDetails(String.valueOf(m.getmId()));
-//        updateMovieDetails();
+        updateMovieDetails();
     }
     @Override
     public void onTrailerClicked(String youtubeVideoID) {
@@ -270,6 +273,7 @@ public class ActivityMain extends AppCompatActivity implements
         // start transaction when want to display different fragment then current
         if (!(activeFragment == fragmentType)) {
             activeFragment = fragmentType;
+            setCollapsingToolbarBehaviour();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -317,6 +321,19 @@ public class ActivityMain extends AppCompatActivity implements
         }
     }
 
+    public void setCollapsingToolbarBehaviour(){
+        if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+            ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true);
+        if (activeFragment == FRAGMENT_POPULAR_MOVIES)
+            ((AppBarLayout)findViewById(R.id.appBarLayout)).setExpanded(false);
+//        AppBarLayout abl = (AppBarLayout)findViewById(R.id.appBarLayout);
+//        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) abl.getLayoutParams();
+//        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+//        if (behavior!=null) {
+//            behavior.setTopAndBottomOffset(0);
+//            behavior.onNestedPreScroll((CoordinatorLayout)findViewById(R.id.main_content), abl, null, 0, 1, new int[2]);
+//        }
+    }
 
     // ---------------- HTTP REQUEST RESULT ----------------
     @Override
@@ -368,7 +385,7 @@ public class ActivityMain extends AppCompatActivity implements
     }
 
     private void updateMovieDetails(){
-        if (!movies.isEmpty()) {
+        if (movies != null && !movies.isEmpty()) {
             selectedMovie = movies.get(0);
             if (mSelectedMovieChange != null)
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);

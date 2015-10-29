@@ -53,11 +53,13 @@
     </style>
 
     <!-- FRAGMENT MOVIE DETAIL -->
+    <style name="MovieDetailsScroll">
+        <!--<item name="android:layout_marginTop">@dimen/detail_backdrop_height</item>-->
+    </style>
     <style name="MovieDetails">
         <item name="android:layout_marginLeft">25dp</item>
     </style>
     <style name="MovieDetailsDescription">
-        <item name="android:layout_marginTop">@dimen/detail_backdrop_height</item>
     </style>
     <style name="MovieDetailsTitleLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/TitleLabel</item>
@@ -103,8 +105,6 @@
     <style name="MovieDetailsTrailersIcon">
         <item name="android:src">@mipmap/app_play_arrow</item>
     </style>
-
-
 
 
 </resources>

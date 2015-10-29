@@ -81,18 +81,19 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers) {
         selectedMovie = movie;
-//        if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null)
-        mSelectedMovieReviews.addAll(reviews);
-        mSelectedMovieTrailers.addAll(trailers);
-        if (isViewsLinked()) {
-            setUpLists();
-            fillViewsWithData();
+        if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null && reviews != null && trailers != null) {
+            mSelectedMovieReviews.addAll(reviews);
+            mSelectedMovieTrailers.addAll(trailers);
+            if (isViewsLinked()) {
+                setUpLists();
+                fillViewsWithData();
 
 
-            if (mListReviews != null && mListReviews.getAdapter() != null)
-                ((AdapterReviews)mListReviews.getAdapter()).updateList(mSelectedMovieReviews);
-            if (mListTrailers != null && mListTrailers.getAdapter() != null)
-                ((AdapterTrailers)mListTrailers.getAdapter()).updateList(mSelectedMovieTrailers);
+                if (mListReviews != null && mListReviews.getAdapter() != null)
+                    ((AdapterReviews) mListReviews.getAdapter()).updateList(mSelectedMovieReviews);
+                if (mListTrailers != null && mListTrailers.getAdapter() != null)
+                    ((AdapterTrailers) mListTrailers.getAdapter()).updateList(mSelectedMovieTrailers);
+            }
         }
     }
 
