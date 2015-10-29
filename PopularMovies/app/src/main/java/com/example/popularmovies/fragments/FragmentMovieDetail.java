@@ -1,5 +1,6 @@
 package com.example.popularmovies.fragments;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
@@ -16,9 +18,11 @@ import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
 import com.example.popularmovies.utils.ItemClickSupport;
+import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.views.adapters.AdapterReviews;
 import com.example.popularmovies.views.adapters.AdapterTrailers;
 import com.example.popularmovies.views.layouts.WrappingLinearLayoutManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +40,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     private TextView mMovieDetailsReleaseDate;
     private TextView mMovieDetailsOverview;
     private TextView mMovieDetailsVoteAverage;
+    private ImageView mMovieDetailsCover;
     private RecyclerView mListReviews;
     private RecyclerView mListTrailers;
 
@@ -123,6 +128,11 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
                 mMovieDetailsReleaseDate.setText(selectedMovie.getmReleaseDate());
             if (selectedMovie.getmOverview() != null)
                 mMovieDetailsOverview.setText(selectedMovie.getmOverview());
+            if (mMovieDetailsCover != null && selectedMovie.getmPosterPath() != null)
+                Picasso.with(getActivity())
+                        .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
+                        .into(mMovieDetailsCover);
+
 
             mMovieDetailsVoteAverage.setText(String.valueOf(selectedMovie.getmVoteAverage()));
         }
@@ -133,6 +143,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         mMovieDetailsReleaseDate    = (TextView) layout.findViewById(R.id.movieDetailsReleaseDate);
         mMovieDetailsOverview       = (TextView) layout.findViewById(R.id.movieDetailsOverview);
         mMovieDetailsVoteAverage    = (TextView) layout.findViewById(R.id.movieDetailsVoteAverage);
+        mMovieDetailsCover          = (ImageView) layout.findViewById(R.id.movieDetailsCover);
         mListReviews    = (RecyclerView) layout.findViewById(R.id.movieDetailsReviews);
         mListTrailers   = (RecyclerView) layout.findViewById(R.id.movieDetailsTrailers);
     }

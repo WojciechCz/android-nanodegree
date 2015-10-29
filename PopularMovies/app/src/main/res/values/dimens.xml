@@ -14,4 +14,7 @@
     <dimen name="MovieDetailsReviewsHeaderPadding">5dp</dimen>
     <dimen name="MovieDetailsTrailersHeaderPadding">5dp</dimen>
 
+    <dimen name="MovieDetailsCoverHeight">200dp</dimen>
+    <dimen name="MovieDetailsCoverWidth">100dp</dimen>
+
 </resources>

@@ -99,6 +99,7 @@ public class ActivityMain extends AppCompatActivity implements
 
         // show TwoPane layout if there is popular movies fragment present
         if (fpm != null) {
+            mTwoPane = true;
 
             if (savedInstanceState != null) {
                 activeFragment = savedInstanceState.getInt(SAVED_INSTANCE_ACTIVE_FRAGMENT);
@@ -119,6 +120,7 @@ public class ActivityMain extends AppCompatActivity implements
         }
         // one pane layout
         else {
+            mTwoPane = false;
             openFragment(FRAGMENT_POPULAR_MOVIES);
             downloadMovies();
         }
@@ -156,7 +158,7 @@ public class ActivityMain extends AppCompatActivity implements
     public void onMovieClicked(Movie m) {
         selectedMovie = m;
         downloadMovieDetails(String.valueOf(m.getmId()));
-        updateMovieDetails();
+//        updateMovieDetails();
     }
     @Override
     public void onTrailerClicked(String youtubeVideoID) {
@@ -322,17 +324,12 @@ public class ActivityMain extends AppCompatActivity implements
     }
 
     public void setCollapsingToolbarBehaviour(){
-        if (activeFragment == FRAGMENT_MOVIE_DETAIL)
-            ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true);
-        if (activeFragment == FRAGMENT_POPULAR_MOVIES)
-            ((AppBarLayout)findViewById(R.id.appBarLayout)).setExpanded(false);
-//        AppBarLayout abl = (AppBarLayout)findViewById(R.id.appBarLayout);
-//        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) abl.getLayoutParams();
-//        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-//        if (behavior!=null) {
-//            behavior.setTopAndBottomOffset(0);
-//            behavior.onNestedPreScroll((CoordinatorLayout)findViewById(R.id.main_content), abl, null, 0, 1, new int[2]);
-//        }
+        if (!mTwoPane) {
+            if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+                ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true);
+            if (activeFragment == FRAGMENT_POPULAR_MOVIES)
+                ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(false);
+        }
     }
 
     // ---------------- HTTP REQUEST RESULT ----------------
@@ -361,12 +358,8 @@ public class ActivityMain extends AppCompatActivity implements
         }
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
-        if (mTwoPane){
-
-        }
-        else {
+        if (!mTwoPane)
             openFragment(FRAGMENT_MOVIE_DETAIL);
-        }
         updateMovieDetails();
     }
     // ---------------- HTTP REQUEST RESULT ----------------
@@ -386,7 +379,8 @@ public class ActivityMain extends AppCompatActivity implements
 
     private void updateMovieDetails(){
         if (movies != null && !movies.isEmpty()) {
-            selectedMovie = movies.get(0);
+            if (selectedMovie == null)
+                selectedMovie = movies.get(0);
             if (mSelectedMovieChange != null)
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
         }
