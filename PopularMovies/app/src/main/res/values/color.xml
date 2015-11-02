@@ -9,6 +9,8 @@
 
     <color name="ColorBackgroundMovieTitle">#55000000</color>
 
+    <color name="ColorTextPrimary">#FFFF</color>
+
     <color name="ColorDividerDark">#222222</color>
     <color name="ColorDividerLight">#616161</color>
 

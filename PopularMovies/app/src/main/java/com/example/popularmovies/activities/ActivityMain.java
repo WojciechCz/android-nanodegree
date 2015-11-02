@@ -282,6 +282,9 @@ public class ActivityMain extends AppCompatActivity implements
         toolbar = (Toolbar) findViewById(R.id.appToolbar);
         setSupportActionBar(toolbar);
         collapsingToolbarImage = (ImageView) findViewById(R.id.collapsingToolbarImage);
+        toolbar.setLogo(R.mipmap.app_logo);
+        toolbar.setTitle(getString(R.string.toolbarMainText));
+        toolbar.invalidate();
     }
 
     public void openFragment(int fragmentType) {

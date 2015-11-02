@@ -8,9 +8,7 @@
 
     <!-- MAIN VIEWS -->
     <style name="AppToolbar">
-        <item name="android:text">@string/toolbarMainText</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
     <style name="MainScreenFragmentsParent">
         <item name="android:layout_marginTop">?attr/actionBarSize</item>
