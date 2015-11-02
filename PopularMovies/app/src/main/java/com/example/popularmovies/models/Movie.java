@@ -103,87 +103,87 @@ public class Movie  implements Parcelable{
         return mAdult;
     }
 
-    public void setmAdult(boolean mAdult) {
+    public void setAdult(boolean mAdult) {
         this.mAdult = mAdult;
     }
 
-    public String getmBackdropPath() {
+    public String getBackdropPath() {
         return mBackdropPath;
     }
 
-    public void setmBackdropPath(String mBackdropPath) {
+    public void setBackdropPath(String mBackdropPath) {
         this.mBackdropPath = mBackdropPath;
     }
 
-    public int[] getmGenreIds() {
+    public int[] getGenreIds() {
         return mGenreIds;
     }
 
-    public void setmGenreIds(int[] mGenreIds) {
+    public void setGenreIds(int[] mGenreIds) {
         this.mGenreIds = mGenreIds;
     }
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setId(int mId) {
         this.mId = mId;
     }
 
-    public String getmOriginLanguage() {
+    public String getOriginLanguage() {
         return mOriginLanguage;
     }
 
-    public void setmOriginLanguage(String mOriginLanguage) {
+    public void setOriginLanguage(String mOriginLanguage) {
         this.mOriginLanguage = mOriginLanguage;
     }
 
-    public String getmOriginTitle() {
+    public String getOriginTitle() {
         return mOriginTitle;
     }
 
-    public void setmOriginTitle(String mOriginTitle) {
+    public void setOriginTitle(String mOriginTitle) {
         this.mOriginTitle = mOriginTitle;
     }
 
-    public String getmOverview() {
+    public String getOverview() {
         return mOverview;
     }
 
-    public void setmOverview(String mOverview) {
+    public void setOverview(String mOverview) {
         this.mOverview = mOverview;
     }
 
-    public String getmReleaseDate() {
+    public String getReleaseDate() {
         return mReleaseDate;
     }
 
-    public void setmReleaseDate(String mReleaseDate) {
+    public void setReleaseDate(String mReleaseDate) {
         this.mReleaseDate = mReleaseDate;
     }
 
-    public String getmPosterPath() {
+    public String getPosterPath() {
         return mPosterPath;
     }
 
-    public void setmPosterPath(String mPosterPath) {
+    public void setPosterPath(String mPosterPath) {
         this.mPosterPath = mPosterPath;
     }
 
-    public float getmPopularity() {
+    public float getPopularity() {
         return mPopularity;
     }
 
-    public void setmPopularity(float mPopularity) {
+    public void setPopularity(float mPopularity) {
         this.mPopularity = mPopularity;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
+    public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
@@ -191,23 +191,23 @@ public class Movie  implements Parcelable{
         return mVideo;
     }
 
-    public void setmVideo(boolean mVideo) {
+    public void setVideo(boolean mVideo) {
         this.mVideo = mVideo;
     }
 
-    public int getmVoteAverage() {
+    public int getVoteAverage() {
         return mVoteAverage;
     }
 
-    public void setmVoteAverage(int mVoteAverage) {
+    public void setVoteAverage(int mVoteAverage) {
         this.mVoteAverage = mVoteAverage;
     }
 
-    public int getmVoteCount() {
+    public int getVoteCount() {
         return mVoteCount;
     }
 
-    public void setmVoteCount(int mVoteCount) {
+    public void setVoteCount(int mVoteCount) {
         this.mVoteCount = mVoteCount;
     }
 

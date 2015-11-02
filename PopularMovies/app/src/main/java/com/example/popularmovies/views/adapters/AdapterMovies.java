@@ -65,10 +65,10 @@ public class AdapterMovies extends BaseAdapter {
             holder = (Holder) convertView.getTag();
         }
 
-        holder.mTitle.setText(movies.get(position).getmOriginTitle());
+        holder.mTitle.setText(movies.get(position).getOriginTitle());
 
         Picasso.with(mContext)
-                .load(UtilMoviesApi.URL_POSTER + movies.get(position).getmPosterPath())
+                .load(UtilMoviesApi.URL_POSTER + movies.get(position).getPosterPath())
                 .into(holder.mMoviePoster);
 
         return convertView;

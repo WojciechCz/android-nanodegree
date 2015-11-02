@@ -123,19 +123,19 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
     private void fillViewsWithData() {
         if (mMovie != null) {
-            if (mMovie.getmOriginTitle() != null)
-                mMovieDetailsTitle.setText(mMovie.getmOriginTitle());
-            if (mMovie.getmReleaseDate() != null)
-                mMovieDetailsReleaseDate.setText(mMovie.getmReleaseDate());
-            if (mMovie.getmOverview() != null)
-                mMovieDetailsOverview.setText(mMovie.getmOverview());
-            if (mMovieDetailsCover != null && mMovie.getmPosterPath() != null)
+            if (mMovie.getOriginTitle() != null)
+                mMovieDetailsTitle.setText(mMovie.getOriginTitle());
+            if (mMovie.getReleaseDate() != null)
+                mMovieDetailsReleaseDate.setText(mMovie.getReleaseDate());
+            if (mMovie.getOverview() != null)
+                mMovieDetailsOverview.setText(mMovie.getOverview());
+            if (mMovieDetailsCover != null && mMovie.getPosterPath() != null)
                 Picasso.with(getActivity())
-                        .load(UtilMoviesApi.URL_POSTER + mMovie.getmPosterPath())
+                        .load(UtilMoviesApi.URL_POSTER + mMovie.getPosterPath())
                         .into(mMovieDetailsCover);
 
 
-            mMovieDetailsVoteAverage.setText(String.valueOf(mMovie.getmVoteAverage()));
+            mMovieDetailsVoteAverage.setText(String.valueOf(mMovie.getVoteAverage()));
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.popularmovies.activities;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -35,6 +37,7 @@ import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMov
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
+import com.example.popularmovies.utils.UtilDB;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
 import com.google.gson.JsonParseException;
@@ -157,7 +160,7 @@ public class ActivityMain extends AppCompatActivity implements
     @Override
     public void onMovieClicked(Movie m) {
         selectedMovie = m;
-        downloadMovieDetails(String.valueOf(m.getmId()));
+        downloadMovieDetails(String.valueOf(m.getId()));
 //        updateMovieDetails();
     }
     @Override
@@ -167,7 +170,12 @@ public class ActivityMain extends AppCompatActivity implements
 
     @Override
     public void onFavouriteButtonClicked(Movie movie) {
-        
+        UtilDB db = new UtilDB();
+        try {
+            db.insertMovieToFavourites(this, movie);
+        } catch (RemoteException | OperationApplicationException e) {
+            e.printStackTrace();
+        }
     }
     // ------------- ------------------ -------------
     public void watchYoutubeVideo(String videoID){
@@ -203,7 +211,7 @@ public class ActivityMain extends AppCompatActivity implements
             if (sortOrder == MOVIES_SORT_POPULAR) {
                 Collections.sort(movies, new Comparator<Movie>() {
                     public int compare(Movie one, Movie two) {
-                        float diff = one.getmPopularity() - two.getmPopularity();
+                        float diff = one.getPopularity() - two.getPopularity();
                         if (diff > 0)
                             return 1;
                         else if (diff < 0)
@@ -215,7 +223,7 @@ public class ActivityMain extends AppCompatActivity implements
             } else if (sortOrder == MOVIES_SORT_RATED) {
                 Collections.sort(movies, new Comparator<Movie>() {
                     public int compare(Movie one, Movie two) {
-                        float diff = one.getmVoteCount() - two.getmVoteCount();
+                        float diff = one.getVoteCount() - two.getVoteCount();
                         if (diff > 0)
                             return 1;
                         else if (diff < 0)
@@ -231,7 +239,7 @@ public class ActivityMain extends AppCompatActivity implements
     private void toolbarImageShow() {
         if (selectedMovie != null && collapsingToolbarImage != null){
             Picasso.with(this)
-                    .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
+                    .load(UtilMoviesApi.URL_POSTER + selectedMovie.getPosterPath())
                     .into(collapsingToolbarImage);
             collapsingToolbarImage.setVisibility(View.VISIBLE);
             collapsingToolbarImageVisible = true;

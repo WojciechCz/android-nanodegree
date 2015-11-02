@@ -27,7 +27,7 @@ public class ProviderFavouriteMovies {
         return builder.build();
     }
 
-    @TableEndpoint(table = DatabaseFavouriteMovies.FAVOURITE_MOVIES) public static class Planets{
+    @TableEndpoint(table = DatabaseFavouriteMovies.FAVOURITE_MOVIES) public static class FavouriteMovies{
         @ContentUri(
                 path = Path.FAVOURITE_MOVIES,
                 type = "vnd.android.cursor.dir/favouriteMovies",

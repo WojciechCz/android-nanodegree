@@ -1,10 +1,14 @@
 package com.example.popularmovies.fragments;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMovies;
+import com.example.popularmovies.models.db.LoaderFavoriteMovies;
+import com.example.popularmovies.models.db.ProviderFavouriteMovies;
+import com.example.popularmovies.views.adapters.AdapterFavouriteMoviesCursor;
 import com.example.popularmovies.views.adapters.AdapterMovies;
 import com.example.popularmovies.R;
 import com.example.popularmovies.activities.ActivityMain;
@@ -33,6 +40,7 @@ public class FragmentPopularMovies extends Fragment implements
     private AdapterMovies mAdapterMovies;
     private List<Movie> mMoviesList;
     private CallbackFragmentPopularMovies mCallback;
+    private LoaderFavoriteMovies mFavoriteMoviesLoader;
 
     public static Fragment newInstance(@NonNull List<Movie> movies, CallbackFragmentPopularMovies callback){
         FragmentPopularMovies f = new FragmentPopularMovies();
@@ -61,6 +69,18 @@ public class FragmentPopularMovies extends Fragment implements
         setUpMovieGrid();
 
         return layout;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        prepareFavoriteMoviesGrid();
+        super.onAttach(context);
+    }
+
+    private void prepareFavoriteMoviesGrid(){
+        Cursor c = getActivity().getContentResolver().query(ProviderFavouriteMovies.FavouriteMovies.CONTENT_URI, null, null, null, null);
+        AdapterFavouriteMoviesCursor adapter = new AdapterFavouriteMoviesCursor(getActivity(), c);
+        mFavoriteMoviesLoader = LoaderFavoriteMovies.newInstance(this, adapter);
     }
 
     private void setUpMovieGrid() {
