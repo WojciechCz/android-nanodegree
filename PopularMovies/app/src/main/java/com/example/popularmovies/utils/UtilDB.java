@@ -26,7 +26,8 @@ public class UtilDB {
         builder.withValue(ColumnsFavouriteMovies.POSTER, m.getPosterPath());
 
         ContentProviderOperation operation = builder.build();
-        context.getContentResolver().applyBatch(ProviderFavouriteMovies.AUTHORITY, new ArrayList<>(Collections.singletonList(operation)));
+        String s = ProviderFavouriteMovies.AUTHORITY;
+        context.getContentResolver().applyBatch(s, new ArrayList<>(Collections.singletonList(operation)));
     }
 
 }

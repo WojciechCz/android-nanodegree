@@ -30,10 +30,9 @@
         </activity>
 
         <provider
-            android:name=".models.db.generated.ProviderFavouriteMovies"
-            android:authorities=".models.db.ProviderFavouriteMovies"
+            android:name="com.example.popularmovies.models.db.generated.ProviderFavouriteMovies"
+            android:authorities="com.example.popularmovies.models.db.ProviderFavouriteMovies"
             android:exported="false"/>
-
 
     </application>
 
