@@ -8,6 +8,7 @@
     <!-- settings -->
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_favorites">Favorites</string>
+    <string name="title_activity_popular">Popular movies</string>
     <!-- preferences -->
     <string name="sorting_order">Sorting order</string>
     <string name="sorting_order_key">sorting_order</string>

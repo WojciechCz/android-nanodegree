@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.popularmovies.R;
 import com.example.popularmovies.models.db.ColumnsFavouriteMovies;
+import com.example.popularmovies.utils.UtilMoviesApi;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -40,7 +41,7 @@ public class AdapterFavouriteMoviesCursor extends AdapterRecyclerViewCursor<Adap
     public void onBindViewHolder(AdapterFavouriteMoviesCursor.ViewHolder viewHolder, Cursor cursor) {
         DatabaseUtils.dumpCursor(cursor);
         Picasso.with(mContext)
-            .load(cursor.getString(cursor.getColumnIndex(ColumnsFavouriteMovies.POSTER)))
+            .load(UtilMoviesApi.URL_POSTER + cursor.getString(cursor.getColumnIndex(ColumnsFavouriteMovies.POSTER)))
             .into(viewHolder.mMoviePoster);
         viewHolder.mTitle.setText(cursor.getString(cursor.getColumnIndex(ColumnsFavouriteMovies.NAME)));
 

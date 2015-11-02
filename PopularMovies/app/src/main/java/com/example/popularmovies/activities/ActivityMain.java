@@ -83,6 +83,7 @@ public class ActivityMain extends AppCompatActivity implements
     private List<Trailer> mSelectedMovieTrailers;
 
     private int sortOrder;
+    private boolean mIsDisplayingFavorite = false;
 
 
     private PopularMoviesDataSetChange mDataSetChange;
@@ -180,7 +181,7 @@ public class ActivityMain extends AppCompatActivity implements
     // ------------- ------------------ -------------
     public void watchYoutubeVideo(String videoID){
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" +videoID)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoID)));
         }
         catch (ActivityNotFoundException e){
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoID)));
@@ -269,7 +270,15 @@ public class ActivityMain extends AppCompatActivity implements
             return true;
         }
         else if (id == R.id.action_see_favorites) {
-            showFavoritesMovies();
+            mIsDisplayingFavorite = !mIsDisplayingFavorite;
+            if (mIsDisplayingFavorite) {
+                showFavoritesMovies();
+                item.setTitle(getString(R.string.title_activity_favorites));
+            }
+            else {
+                showPopularMovies();
+                item.setTitle(getString(R.string.title_activity_popular));
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -277,6 +286,10 @@ public class ActivityMain extends AppCompatActivity implements
 
     private void showFavoritesMovies(){
         mDataSetChange.onFavoriteMoviesRequested();
+    }
+
+    private void showPopularMovies(){
+        mDataSetChange.onPopularMoviesRequest();
     }
 
     private void downloadMovies() {
@@ -414,6 +427,7 @@ public class ActivityMain extends AppCompatActivity implements
     public interface PopularMoviesDataSetChange {
         void onPopularMoviesDataSetChange(List<Movie> movieList);
         void onFavoriteMoviesRequested();
+        void onPopularMoviesRequest();
     }
     public interface SelectedMovieChange {
         void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers);

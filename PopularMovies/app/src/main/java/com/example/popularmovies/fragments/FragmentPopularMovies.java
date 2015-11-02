@@ -101,10 +101,19 @@ public class FragmentPopularMovies extends Fragment implements
         mFavoriteMoviesLoader.initLoader();
         setAdapterForMovieList(adapter);
     }
+    @Override
+    public void onPopularMoviesRequest() {
+        if (mMoviesList != null){
+            if (mAdapterMovies == null)
+                mAdapterMovies = new AdapterMovies(getActivity(), mMoviesList, this);
+
+            setAdapterForMovieList(new AdapterMovies(getActivity(), mMoviesList, this));
+        }
+    }
     // --------- clicked movie ---------
     @Override
     public void onClick(View v) {
-        mCallback.onMovieClicked( mMoviesList.get(mMoviesGrid.indexOfChild(v)) );
+        mCallback.onMovieClicked(mMoviesList.get(mMoviesGrid.indexOfChild(v)));
     }
     // --------- --------- --------- ---------
 
