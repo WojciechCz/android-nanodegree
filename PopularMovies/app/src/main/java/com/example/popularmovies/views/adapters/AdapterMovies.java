@@ -1,10 +1,10 @@
 package com.example.popularmovies.views.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,14 +19,15 @@ import java.util.List;
 /**
  * Created by fares on 7/27/15.
  */
-public class AdapterMovies extends BaseAdapter {
+public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.Holder> {
 
     private Context mContext;
     private List<Movie> movies;
+    private View.OnClickListener mCallback;
 
-
-    public AdapterMovies(Context mContext, List<Movie> movies) {
+    public AdapterMovies(Context mContext, List<Movie> movies, View.OnClickListener callback) {
         this.mContext = mContext;
+        this.mCallback = callback;
         if (movies != null)
             this.movies = movies;
         else
@@ -34,48 +35,33 @@ public class AdapterMovies extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return movies.size();
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movies_grid, parent, false));
     }
 
     @Override
-    public Object getItem(int i) {
-        return movies.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Holder holder;
-        if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_movies_grid, parent, false);
-
-            holder = new Holder();
-            holder.mMoviePoster = (ImageView) convertView.findViewById(R.id.listItemMoviesGridImage);
-            holder.mTitle       = (TextView) convertView.findViewById(R.id.listItemMoviesGridImageTitle);
-
-            convertView.setTag(holder);
-        }
-        else {
-            holder = (Holder) convertView.getTag();
-        }
-
+    public void onBindViewHolder(Holder holder, int position) {
         holder.mTitle.setText(movies.get(position).getOriginTitle());
 
         Picasso.with(mContext)
                 .load(UtilMoviesApi.URL_POSTER + movies.get(position).getPosterPath())
                 .into(holder.mMoviePoster);
-
-        return convertView;
     }
 
-    private class Holder {
+    @Override
+    public int getItemCount() {
+        return movies.size();
+    }
+
+    public class Holder extends RecyclerView.ViewHolder{
         ImageView mMoviePoster;
         TextView mTitle;
+
+        public Holder(View itemView) {
+            super(itemView);
+            mMoviePoster = (ImageView) itemView.findViewById(R.id.listItemMoviesGridImage);
+            mTitle       = (TextView)  itemView.findViewById(R.id.listItemMoviesGridImageTitle);
+            itemView.setOnClickListener(mCallback);
+        }
     }
 }

@@ -9,11 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
 import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMovies;
 import com.example.popularmovies.models.db.LoaderFavoriteMovies;
@@ -32,11 +40,12 @@ import java.util.List;
  * Created by fares on 7/27/15.
  */
 public class FragmentPopularMovies extends Fragment implements
-        ActivityMain.PopularMoviesDataSetChange, AdapterView.OnItemClickListener {
+        ActivityMain.PopularMoviesDataSetChange, View.OnClickListener {
 
     public static final String SAVED_INSTANCE_MOVIES = "movies";
+    public static final int COLUMN_SPAN = 3;
 
-    private GridView mMoviesGrid;
+    private RecyclerView mMoviesGrid;
     private AdapterMovies mAdapterMovies;
     private List<Movie> mMoviesList;
     private CallbackFragmentPopularMovies mCallback;
@@ -53,6 +62,7 @@ public class FragmentPopularMovies extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -72,33 +82,31 @@ public class FragmentPopularMovies extends Fragment implements
     }
 
     @Override
-    public void onAttach(Context context) {
-        prepareFavoriteMoviesGrid();
-        super.onAttach(context);
+    public void onResume() {
+        super.onResume();
+        if (mFavoriteMoviesLoader != null)
+            mFavoriteMoviesLoader.restartLoader();
     }
 
-    private void prepareFavoriteMoviesGrid(){
-        Cursor c = getActivity().getContentResolver().query(ProviderFavouriteMovies.FavouriteMovies.CONTENT_URI, null, null, null, null);
-        AdapterFavouriteMoviesCursor adapter = new AdapterFavouriteMoviesCursor(getActivity(), c);
-        mFavoriteMoviesLoader = LoaderFavoriteMovies.newInstance(this, adapter);
-    }
-
-    private void setUpMovieGrid() {
-        mAdapterMovies = new AdapterMovies(getActivity(), mMoviesList);
-        mMoviesGrid.setAdapter(mAdapterMovies);
-        mMoviesGrid.setOnItemClickListener(this);
-    }
-
-    private void linkedViews(View layout) {
-        mMoviesGrid = (GridView) layout.findViewById(R.id.popularMoviesGrid);
-    }
-
+    // --------- activity callbacks ---------
     @Override
     public void onPopularMoviesDataSetChange(List<Movie> movieList) {
         mMoviesList.clear();
         mMoviesList.addAll(movieList);
         mAdapterMovies.notifyDataSetChanged();
     }
+    @Override
+    public void onFavoriteMoviesRequested() {
+        AdapterFavouriteMoviesCursor adapter = getFavoriteMoviesCursorAdapter();
+        mFavoriteMoviesLoader.initLoader();
+        setAdapterForMovieList(adapter);
+    }
+    // --------- clicked movie ---------
+    @Override
+    public void onClick(View v) {
+        mCallback.onMovieClicked( mMoviesList.get(mMoviesGrid.indexOfChild(v)) );
+    }
+    // --------- --------- --------- ---------
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -106,12 +114,34 @@ public class FragmentPopularMovies extends Fragment implements
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mCallback.onMovieClicked( (Movie) parent.getAdapter().getItem(position) );
+    private AdapterFavouriteMoviesCursor getFavoriteMoviesCursorAdapter(){
+        Cursor c = getActivity().getContentResolver().query(ProviderFavouriteMovies.FavouriteMovies.CONTENT_URI, null, null, null, null);
+        AdapterFavouriteMoviesCursor adapter = new AdapterFavouriteMoviesCursor(getActivity(), c);
+        mFavoriteMoviesLoader = LoaderFavoriteMovies.newInstance(this, adapter);
+        return adapter;
     }
+
+    private void setUpMovieGrid() {
+        mAdapterMovies = new AdapterMovies(getActivity(), mMoviesList, this);
+        mMoviesGrid.setLayoutManager(new GridLayoutManager(getActivity(), COLUMN_SPAN));
+        setAdapterForMovieList(mAdapterMovies);
+    }
+
+    private void setAdapterForMovieList(RecyclerView.Adapter adapter){
+        mMoviesGrid.setAdapter(adapter);
+    }
+    
+    private void linkedViews(View layout) {
+        mMoviesGrid = (RecyclerView) layout.findViewById(R.id.popularMoviesGrid);
+    }
+
 
     public void setCallback(CallbackFragmentPopularMovies mCallback) {
         this.mCallback = mCallback;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_movies_list, menu);
     }
 }

@@ -268,7 +268,15 @@ public class ActivityMain extends AppCompatActivity implements
             startActivity(new Intent(this, ActivitySettings.class));
             return true;
         }
+        else if (id == R.id.action_see_favorites) {
+            showFavoritesMovies();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showFavoritesMovies(){
+        mDataSetChange.onFavoriteMoviesRequested();
     }
 
     private void downloadMovies() {
@@ -405,6 +413,7 @@ public class ActivityMain extends AppCompatActivity implements
 
     public interface PopularMoviesDataSetChange {
         void onPopularMoviesDataSetChange(List<Movie> movieList);
+        void onFavoriteMoviesRequested();
     }
     public interface SelectedMovieChange {
         void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers);
