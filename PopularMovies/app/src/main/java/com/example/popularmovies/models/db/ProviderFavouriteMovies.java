@@ -38,9 +38,8 @@ public class ProviderFavouriteMovies {
                 name = "FAVOURITE_MOVIE_ID",
                 path = Path.FAVOURITE_MOVIES + "/#",
                 type = "vnd.android.cursor.item/favouriteMovie",
-                whereColumn = ColumnsFavouriteMovies._ID,
+                whereColumn = ColumnsFavouriteMovies.KEY,
                 pathSegment = 1)
-
         public static Uri withId(long id){
             return buildUri(Path.FAVOURITE_MOVIES, String.valueOf(id));
         }

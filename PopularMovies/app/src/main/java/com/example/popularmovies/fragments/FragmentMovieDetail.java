@@ -16,6 +16,8 @@ import com.example.popularmovies.fragments.interfaces.CallbackFragmentMovieDetai
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
+import com.example.popularmovies.models.db.DatabaseFavouriteMovies;
+import com.example.popularmovies.models.db.ProviderFavouriteMovies;
 import com.example.popularmovies.utils.ItemClickSupport;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.views.adapters.AdapterReviews;
@@ -171,7 +173,21 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.movieDetailsFavouriteButton){
+            favoriteButtonSrc(R.mipmap.app_favourite_movie_marked);
             mCallback.onFavouriteButtonClicked(mMovie);
         }
     }
+
+    private boolean checkIfFavorite(){
+        getActivity().getContentResolver().get
+        Movie m = ProviderFavouriteMovies.FavouriteMovies.withId(mMovie.getId());
+
+        return false;
+    }
+
+    // ------- favorite button change src -------
+    private void favoriteButtonSrc(int imageResourceId){
+        mMovieDetailsFavouriteButton.setImageResource(imageResourceId);
+    }
+    // ------- ------- ------- ------- ------- --
 }
