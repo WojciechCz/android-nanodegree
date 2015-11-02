@@ -1,6 +1,5 @@
 package com.example.popularmovies.fragments;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,12 +26,12 @@ import com.squareup.picasso.Picasso;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FragmentMovieDetail extends Fragment implements ActivityMain.SelectedMovieChange, ItemClickSupport.OnItemClickListener {
+public class FragmentMovieDetail extends Fragment implements ActivityMain.SelectedMovieChange, ItemClickSupport.OnItemClickListener, View.OnClickListener {
 
     public static final String SAVED_INSTANCE_MOVIE = "movie";
     private String sortOrder;
 
-    private Movie selectedMovie;
+    private Movie mMovie;
     private List<Review> mSelectedMovieReviews;
     private List<Trailer> mSelectedMovieTrailers;
 
@@ -41,6 +40,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     private TextView mMovieDetailsOverview;
     private TextView mMovieDetailsVoteAverage;
     private ImageView mMovieDetailsCover;
+    private ImageView mMovieDetailsFavouriteButton;
     private RecyclerView mListReviews;
     private RecyclerView mListTrailers;
 
@@ -48,7 +48,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
     public static FragmentMovieDetail newInstance(Movie selectedMovie, CallbackFragmentMovieDetails callback) {
         FragmentMovieDetail fragment = new FragmentMovieDetail();
-        fragment.selectedMovie = selectedMovie;
+        fragment.mMovie = selectedMovie;
         fragment.mSelectedMovieReviews = new LinkedList<>();
         fragment.mSelectedMovieTrailers = new LinkedList<>();
         fragment.mCallback = callback;
@@ -67,10 +67,11 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         View layout = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
         if(savedInstanceState != null){
-            selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
+            mMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
         }
 
         linkViews(layout);
+        linkListeners();
         fillViewsWithData();
         setUpLists();
 
@@ -79,13 +80,13 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
+        outState.putParcelable(SAVED_INSTANCE_MOVIE, mMovie);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers) {
-        selectedMovie = movie;
+        mMovie = movie;
         if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null && reviews != null && trailers != null) {
             mSelectedMovieReviews.addAll(reviews);
             mSelectedMovieTrailers.addAll(trailers);
@@ -121,21 +122,25 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     }
 
     private void fillViewsWithData() {
-        if (selectedMovie != null) {
-            if (selectedMovie.getmOriginTitle() != null)
-                mMovieDetailsTitle.setText(selectedMovie.getmOriginTitle());
-            if (selectedMovie.getmReleaseDate() != null)
-                mMovieDetailsReleaseDate.setText(selectedMovie.getmReleaseDate());
-            if (selectedMovie.getmOverview() != null)
-                mMovieDetailsOverview.setText(selectedMovie.getmOverview());
-            if (mMovieDetailsCover != null && selectedMovie.getmPosterPath() != null)
+        if (mMovie != null) {
+            if (mMovie.getmOriginTitle() != null)
+                mMovieDetailsTitle.setText(mMovie.getmOriginTitle());
+            if (mMovie.getmReleaseDate() != null)
+                mMovieDetailsReleaseDate.setText(mMovie.getmReleaseDate());
+            if (mMovie.getmOverview() != null)
+                mMovieDetailsOverview.setText(mMovie.getmOverview());
+            if (mMovieDetailsCover != null && mMovie.getmPosterPath() != null)
                 Picasso.with(getActivity())
-                        .load(UtilMoviesApi.URL_POSTER + selectedMovie.getmPosterPath())
+                        .load(UtilMoviesApi.URL_POSTER + mMovie.getmPosterPath())
                         .into(mMovieDetailsCover);
 
 
-            mMovieDetailsVoteAverage.setText(String.valueOf(selectedMovie.getmVoteAverage()));
+            mMovieDetailsVoteAverage.setText(String.valueOf(mMovie.getmVoteAverage()));
         }
+    }
+
+    private void linkListeners() {
+        mMovieDetailsFavouriteButton.setOnClickListener(this);
     }
 
     private void linkViews(View layout) {
@@ -144,6 +149,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         mMovieDetailsOverview       = (TextView) layout.findViewById(R.id.movieDetailsOverview);
         mMovieDetailsVoteAverage    = (TextView) layout.findViewById(R.id.movieDetailsVoteAverage);
         mMovieDetailsCover          = (ImageView) layout.findViewById(R.id.movieDetailsCover);
+        mMovieDetailsFavouriteButton= (ImageView) layout.findViewById(R.id.movieDetailsFavouriteButton);
         mListReviews    = (RecyclerView) layout.findViewById(R.id.movieDetailsReviews);
         mListTrailers   = (RecyclerView) layout.findViewById(R.id.movieDetailsTrailers);
     }
@@ -160,5 +166,12 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
        if (recyclerView.getId() == R.id.movieDetailsTrailers) {
            mCallback.onTrailerClicked(mSelectedMovieTrailers.get(position).getKey());
        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.movieDetailsFavouriteButton){
+            mCallback.onFavouriteButtonClicked(mMovie);
+        }
     }
 }

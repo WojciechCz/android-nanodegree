@@ -164,6 +164,11 @@ public class ActivityMain extends AppCompatActivity implements
     public void onTrailerClicked(String youtubeVideoID) {
         watchYoutubeVideo(youtubeVideoID);
     }
+
+    @Override
+    public void onFavouriteButtonClicked(Movie movie) {
+        
+    }
     // ------------- ------------------ -------------
     public void watchYoutubeVideo(String videoID){
         try {
