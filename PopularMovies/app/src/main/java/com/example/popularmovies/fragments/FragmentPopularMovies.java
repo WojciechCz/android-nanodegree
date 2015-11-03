@@ -126,7 +126,7 @@ public class FragmentPopularMovies extends Fragment implements
 
     private AdapterFavouriteMoviesCursor getFavoriteMoviesCursorAdapter(){
         Cursor c = getActivity().getContentResolver().query(ProviderFavouriteMovies.FavouriteMovies.CONTENT_URI, null, null, null, null);
-        AdapterFavouriteMoviesCursor adapter = new AdapterFavouriteMoviesCursor(getActivity(), c);
+        AdapterFavouriteMoviesCursor adapter = new AdapterFavouriteMoviesCursor(getActivity(), this, c);
         mFavoriteMoviesLoader = LoaderFavoriteMovies.newInstance(this, adapter);
         return adapter;
     }

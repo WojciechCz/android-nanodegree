@@ -16,44 +16,62 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/MovieDetailsDescription"
+                android:orientation="horizontal"
+                style="@style/MovieDetailsFavoriteButtonMovieDetails"
                 >
 
-                <TextView
-                    android:id="@+id/movieDetailsTitleLabel"
-                    style="@style/MovieDetailsTitleLabel"
+                <ImageView
+                    android:id="@+id/movieDetailsFavouriteButton"
+                    style="@style/MovieDetailsFavouriteButton"
+                    android:src="@mipmap/app_favourite_movie_unmarked"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/movieDetailsTitle"
-                    style="@style/MovieDetailsTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    />
 
-                <TextView
-                    android:id="@+id/movieDetailsReleaseDateLabel"
-                    style="@style/MovieDetailsReleaseDateLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/movieDetailsReleaseDate"
-                    style="@style/MovieDetailsReleaseDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                style="@style/MovieDetailsDescription"
+                    >
 
-                <TextView
-                    android:id="@+id/movieDetailsVoteAverageLabel"
-                    style="@style/MovieDetailsVoteAverageLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/movieDetailsVoteAverage"
-                    style="@style/MovieDetailsVoteAverage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/movieDetailsTitleLabel"
+                        style="@style/MovieDetailsTitleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/movieDetailsTitle"
+                        style="@style/MovieDetailsTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                <TextView
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/movieDetailsReleaseDateLabel"
+                style="@style/MovieDetailsReleaseDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/movieDetailsReleaseDate"
+                style="@style/MovieDetailsReleaseDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/movieDetailsVoteAverageLabel"
+                style="@style/MovieDetailsVoteAverageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/movieDetailsVoteAverage"
+                style="@style/MovieDetailsVoteAverage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
                     android:id="@+id/movieDetailsOverviewLabel"
                     style="@style/MovieDetailsOverviewLabel"
                     android:layout_width="wrap_content"
@@ -64,7 +82,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </LinearLayout>
 
             <TextView
                 style="@style/MovieDetailsReviewsHeader"

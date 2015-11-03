@@ -79,6 +79,11 @@
     <style name="MovieDetailsOverviewLabel" parent="MovieDetailTextViewLabel">
         <item name="android:text">@string/OverviewLabel</item>
     </style>
+    <style name="MovieDetailsFavoriteButtonMovieDetails">
+    </style>
+    <style name="MovieDetailsFavouriteButton">
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
     <style name="MovieDetailsOverview" parent="MovieDetailTextView"></style>
 
     <style name="MovieDetailsReviewsHeader">

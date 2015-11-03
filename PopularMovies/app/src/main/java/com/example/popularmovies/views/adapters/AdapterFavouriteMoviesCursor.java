@@ -40,6 +40,7 @@ public class AdapterFavouriteMoviesCursor extends AdapterRecyclerViewCursor<Adap
             Cursor c = AdapterFavouriteMoviesCursor.this.getCursor();
             Movie m = new Movie.Builder()
                     .id(c.getInt(c.getColumnIndex(ColumnsFavouriteMovies.KEY)))
+                    .posterPath(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.POSTER)))
                     .backdropPath(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.BACKDROP_PATH)))
                     .originLanguage(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.ORIGIN_LANGUAGE)))
                     .originTitle(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.ORIGIN_TITLE)))
@@ -55,7 +56,7 @@ public class AdapterFavouriteMoviesCursor extends AdapterRecyclerViewCursor<Adap
 
     private AdapterMoviesListener mCallback;
 
-    public AdapterFavouriteMoviesCursor(Context context, Cursor cursor, AdapterMoviesListener callback) {
+    public AdapterFavouriteMoviesCursor(Context context, AdapterMoviesListener callback, Cursor cursor) {
         super(context, cursor);
         mCallback = callback;
     }

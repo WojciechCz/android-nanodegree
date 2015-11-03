@@ -37,6 +37,7 @@ import com.example.popularmovies.fragments.interfaces.CallbackFragmentPopularMov
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
+import com.example.popularmovies.models.db.ProviderFavouriteMovies;
 import com.example.popularmovies.utils.UtilDB;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
@@ -161,8 +162,11 @@ public class ActivityMain extends AppCompatActivity implements
     @Override
     public void onMovieClicked(Movie m) {
         selectedMovie = m;
-        downloadMovieDetails(String.valueOf(m.getId()));
-//        updateMovieDetails();
+        if (mIsDisplayingFavorite)
+            updateMovieDetails();
+        else
+            downloadMovieDetails(String.valueOf(m.getId()));
+
     }
     @Override
     public void onTrailerClicked(String youtubeVideoID) {
@@ -245,6 +249,7 @@ public class ActivityMain extends AppCompatActivity implements
             collapsingToolbarImage.setVisibility(View.VISIBLE);
             collapsingToolbarImageVisible = true;
             toolbar.setBackgroundColor(Color.TRANSPARENT);
+            toolbar.setLogo(android.R.color.transparent);
         }
     }
     private void toolbarImageHide() {
@@ -252,6 +257,7 @@ public class ActivityMain extends AppCompatActivity implements
             collapsingToolbarImage.setVisibility(View.GONE);
             collapsingToolbarImageVisible = false;
             toolbar.setBackgroundColor(getResources().getColor(R.color.ColorPrimary));
+            toolbar.setLogo(R.mipmap.app_logo);
         }
     }
 
