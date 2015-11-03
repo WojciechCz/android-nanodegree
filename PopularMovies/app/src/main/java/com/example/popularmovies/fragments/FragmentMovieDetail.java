@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
@@ -204,6 +206,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_movie_details, menu);
+        mCallback.registerShareProvider( (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider());
     }
     // ------- ------- ------- ------- ------- --
 }

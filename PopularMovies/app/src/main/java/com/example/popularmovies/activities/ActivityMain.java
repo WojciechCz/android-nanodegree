@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.example.popularmovies.fragments.FragmentMovieDetail;
@@ -85,6 +86,9 @@ public class ActivityMain extends AppCompatActivity implements
 
     private int sortOrder;
     private boolean mIsDisplayingFavorite = false;
+
+    private ShareActionProvider mShareActionProvider;
+
 
 
     private PopularMoviesDataSetChange mDataSetChange;
@@ -181,6 +185,10 @@ public class ActivityMain extends AppCompatActivity implements
         } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public void registerShareProvider(ShareActionProvider provider){
+        mShareActionProvider = provider;
     }
     // ------------- ------------------ -------------
     public void watchYoutubeVideo(String videoID){
@@ -286,6 +294,9 @@ public class ActivityMain extends AppCompatActivity implements
                 item.setTitle(getString(R.string.title_activity_favorites));
             }
             return true;
+        }
+        else if (id == R.id.action_share) {
+
         }
         return super.onOptionsItemSelected(item);
     }
