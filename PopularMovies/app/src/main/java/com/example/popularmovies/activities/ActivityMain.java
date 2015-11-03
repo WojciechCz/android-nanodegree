@@ -308,6 +308,11 @@ public class ActivityMain extends AppCompatActivity implements
         toolbar.invalidate();
     }
 
+    private void forceOpenFragment(int fragId){
+        activeFragment = -1;
+        openFragment(fragId);
+    }
+
     public void openFragment(int fragmentType) {
         // start transaction when want to display different fragment then current
         if (!(activeFragment == fragmentType)) {
@@ -422,11 +427,6 @@ public class ActivityMain extends AppCompatActivity implements
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
         }
         forceOpenFragment(FRAGMENT_MOVIE_DETAIL);
-    }
-
-    private void forceOpenFragment(int fragId){
-        activeFragment = -1;
-        openFragment(fragId);
     }
 
     public interface PopularMoviesDataSetChange {

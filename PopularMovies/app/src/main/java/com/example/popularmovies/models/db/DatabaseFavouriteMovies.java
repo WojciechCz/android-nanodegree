@@ -10,7 +10,7 @@ import net.simonvt.schematic.annotation.Table;
 public class DatabaseFavouriteMovies {
     private DatabaseFavouriteMovies(){}
 
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
 
     @Table(ColumnsFavouriteMovies.class) public static final String FAVOURITE_MOVIES = "favouriteMovies";
 }

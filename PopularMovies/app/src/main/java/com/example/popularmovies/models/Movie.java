@@ -70,6 +70,38 @@ public class Movie  implements Parcelable{
             this.mId = id;
             return this;
         }
+        public Builder backdropPath (String backdropPath){
+            this.mBackdropPath = backdropPath;
+            return this;
+        }
+        public Builder originLanguage (String originLanguage){
+            this.mOriginLanguage = originLanguage;
+            return this;
+        }
+        public Builder originTitle (String originTitle){
+            this.mOriginTitle = originTitle;
+            return this;
+        }
+        public Builder releaseDate (String releaseDate){
+            this.mReleaseDate = releaseDate;
+            return this;
+        }
+        public Builder overview (String overview){
+            this.mOverview = overview;
+            return this;
+        }
+        public Builder popularity (float popularity){
+            this.mPopularity = popularity;
+            return this;
+        }
+        public Builder voteAverage (int voteAverage){
+            this.mVoteAverage = voteAverage;
+            return this;
+        }
+        public Builder voteCount (int voteCount){
+            this.mVoteCount = voteCount;
+            return this;
+        }
 
         public Movie build(){
             return new Movie(this);
