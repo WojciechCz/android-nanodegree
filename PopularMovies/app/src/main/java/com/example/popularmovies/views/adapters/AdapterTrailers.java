@@ -42,6 +42,7 @@ public class AdapterTrailers extends RecyclerView.Adapter<AdapterTrailers.Holder
         if (mListTrailers != null){
             mListTrailers.clear();
             mListTrailers.addAll(trailers);
+            notifyDataSetChanged();
         }
     }
 

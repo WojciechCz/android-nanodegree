@@ -49,11 +49,12 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
     private CallbackFragmentMovieDetails mCallback;
 
-    public static FragmentMovieDetail newInstance(Movie selectedMovie, CallbackFragmentMovieDetails callback) {
+    public static FragmentMovieDetail newInstance(CallbackFragmentMovieDetails callback, Movie selectedMovie,
+                                                  List<Review> reviews, List<Trailer> trailers) {
         FragmentMovieDetail fragment = new FragmentMovieDetail();
         fragment.mMovie = selectedMovie;
-        fragment.mSelectedMovieReviews = new LinkedList<>();
-        fragment.mSelectedMovieTrailers = new LinkedList<>();
+        fragment.mSelectedMovieReviews = (reviews == null) ? new LinkedList<Review>() : reviews;
+        fragment.mSelectedMovieTrailers = (trailers == null) ? new LinkedList<Trailer>() : trailers;
         fragment.mCallback = callback;
         return fragment;
     }
@@ -155,6 +156,9 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         mMovieDetailsFavouriteButton= (ImageView) layout.findViewById(R.id.movieDetailsFavouriteButton);
         mListReviews    = (RecyclerView) layout.findViewById(R.id.movieDetailsReviews);
         mListTrailers   = (RecyclerView) layout.findViewById(R.id.movieDetailsTrailers);
+
+        if (mMovie != null && checkIfFavorite())
+            favoriteButtonSrc(R.mipmap.app_favourite_movie_marked);
     }
 
     private boolean isViewsLinked(){
@@ -174,8 +178,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.movieDetailsFavouriteButton){
-            boolean isFav = checkIfFavorite();
-            if (!isFav) {
+            if (!checkIfFavorite()) {
                 favoriteButtonSrc(R.mipmap.app_favourite_movie_marked);
                 mCallback.onFavouriteButtonClicked(mMovie);
             }

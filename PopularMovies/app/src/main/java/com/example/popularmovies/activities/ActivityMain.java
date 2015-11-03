@@ -336,7 +336,7 @@ public class ActivityMain extends AppCompatActivity implements
                 return frag;
             case FRAGMENT_MOVIE_DETAIL:
                 toolbarImageShow();
-                frag = FragmentMovieDetail.newInstance(selectedMovie, this);
+                frag = FragmentMovieDetail.newInstance(this, selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
                 mSelectedMovieChange = (FragmentMovieDetail) frag;
                 return frag;
             default:
@@ -421,8 +421,13 @@ public class ActivityMain extends AppCompatActivity implements
             if (mSelectedMovieChange != null)
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
         }
+        forceOpenFragment(FRAGMENT_MOVIE_DETAIL);
     }
 
+    private void forceOpenFragment(int fragId){
+        activeFragment = -1;
+        openFragment(fragId);
+    }
 
     public interface PopularMoviesDataSetChange {
         void onPopularMoviesDataSetChange(List<Movie> movieList);

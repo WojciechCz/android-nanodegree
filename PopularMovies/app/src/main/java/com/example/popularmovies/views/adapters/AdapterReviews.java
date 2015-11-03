@@ -42,6 +42,7 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.Holder> 
         if (mListReviews != null){
             mListReviews.clear();
             mListReviews.addAll(reviews);
+            notifyDataSetChanged();
         }
     }
 
