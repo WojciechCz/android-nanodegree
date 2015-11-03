@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.popularmovies.models.Movie;
@@ -32,16 +33,22 @@ public class UtilDB {
         context.getContentResolver().applyBatch(s, new ArrayList<>(Collections.singletonList(operation)));
     }
 
-    public Movie getMovieFromDB(Context context, String movieId, LoaderFavoriteMovies loaderFavoriteMovies){
+    @Nullable
+    public Movie getMovieFromDB(Context context, int movieId){
         Cursor c = context.getContentResolver().query(ProviderFavouriteMovies.FavouriteMovies.CONTENT_URI,
                 null,
-                ColumnsFavouriteMovies.KEY,
-                new String[] {movieId},
+                ColumnsFavouriteMovies.KEY + "=?",
+                new String[] {String.valueOf(movieId)},
                 null);
 
         if (c != null && c.moveToFirst()){
-//            Movie favoriteMovie
+             return new Movie.Builder()
+                    .id(c.getInt(c.getColumnIndex(ColumnsFavouriteMovies.KEY)))
+                    .posterPath(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.POSTER)))
+                    .title(c.getString(c.getColumnIndex(ColumnsFavouriteMovies.NAME)))
+                    .build();
         }
+        return null;
     }
 
 }

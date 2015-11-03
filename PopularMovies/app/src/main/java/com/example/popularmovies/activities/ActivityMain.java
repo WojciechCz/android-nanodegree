@@ -273,11 +273,11 @@ public class ActivityMain extends AppCompatActivity implements
             mIsDisplayingFavorite = !mIsDisplayingFavorite;
             if (mIsDisplayingFavorite) {
                 showFavoritesMovies();
-                item.setTitle(getString(R.string.title_activity_favorites));
+                item.setTitle(getString(R.string.title_activity_popular));
             }
             else {
                 showPopularMovies();
-                item.setTitle(getString(R.string.title_activity_popular));
+                item.setTitle(getString(R.string.title_activity_favorites));
             }
             return true;
         }

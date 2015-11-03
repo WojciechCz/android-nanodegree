@@ -39,6 +39,60 @@ public class Movie  implements Parcelable{
         }
     };
 
+    public static class Builder {
+        private boolean mAdult;
+        private String mBackdropPath;
+        private int[] mGenreIds;
+        private int mId;
+        private String mOriginLanguage;
+        private String mOriginTitle;
+        private String mOverview;
+        private String mReleaseDate;
+        private String mPosterPath;
+        private float mPopularity;
+        private String mTitle;
+        private boolean mVideo;
+        private int mVoteAverage;
+        private int mVoteCount;
+
+        public Builder (){
+        }
+
+        public Builder title (String title){
+            this.mTitle = title;
+            return this;
+        }
+        public Builder posterPath (String posterPath){
+            this.mPosterPath = posterPath;
+            return this;
+        }
+        public Builder id (int id){
+            this.mId = id;
+            return this;
+        }
+
+        public Movie build(){
+            return new Movie(this);
+        }
+    }
+
+    public Movie(Builder builder){
+        this.mAdult = builder.mAdult;
+        this.mBackdropPath = builder.mBackdropPath;
+        this.mGenreIds = builder.mGenreIds;
+        this.mId = builder.mId;
+        this.mOriginLanguage = builder.mOriginLanguage;
+        this.mOriginTitle = builder.mOriginTitle;
+        this.mOverview = builder.mOverview;
+        this.mReleaseDate = builder.mReleaseDate;
+        this.mPosterPath = builder.mPosterPath;
+        this.mPopularity = builder.mPopularity;
+        this.mTitle = builder.mTitle;
+        this.mVideo = builder.mVideo;
+        this.mVoteAverage = builder.mVoteAverage;
+        this.mVoteCount = builder.mVoteCount;
+    }
+
     public Movie(Parcel source) {
         this.mAdult         = source.readByte() != 0;
         this.mBackdropPath  = source.readString();
@@ -55,6 +109,7 @@ public class Movie  implements Parcelable{
         this.mVoteAverage   = source.readInt();
         this.mVoteCount     = source.readInt();
     }
+
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
@@ -99,10 +154,11 @@ public class Movie  implements Parcelable{
                 '}';
     }
 
-    public boolean ismAdult() {
+
+
+    public boolean isAdult() {
         return mAdult;
     }
-
     public void setAdult(boolean mAdult) {
         this.mAdult = mAdult;
     }
@@ -110,7 +166,6 @@ public class Movie  implements Parcelable{
     public String getBackdropPath() {
         return mBackdropPath;
     }
-
     public void setBackdropPath(String mBackdropPath) {
         this.mBackdropPath = mBackdropPath;
     }
@@ -118,7 +173,6 @@ public class Movie  implements Parcelable{
     public int[] getGenreIds() {
         return mGenreIds;
     }
-
     public void setGenreIds(int[] mGenreIds) {
         this.mGenreIds = mGenreIds;
     }
@@ -126,7 +180,6 @@ public class Movie  implements Parcelable{
     public int getId() {
         return mId;
     }
-
     public void setId(int mId) {
         this.mId = mId;
     }
@@ -134,7 +187,6 @@ public class Movie  implements Parcelable{
     public String getOriginLanguage() {
         return mOriginLanguage;
     }
-
     public void setOriginLanguage(String mOriginLanguage) {
         this.mOriginLanguage = mOriginLanguage;
     }
@@ -142,7 +194,6 @@ public class Movie  implements Parcelable{
     public String getOriginTitle() {
         return mOriginTitle;
     }
-
     public void setOriginTitle(String mOriginTitle) {
         this.mOriginTitle = mOriginTitle;
     }
@@ -150,7 +201,6 @@ public class Movie  implements Parcelable{
     public String getOverview() {
         return mOverview;
     }
-
     public void setOverview(String mOverview) {
         this.mOverview = mOverview;
     }
@@ -158,7 +208,6 @@ public class Movie  implements Parcelable{
     public String getReleaseDate() {
         return mReleaseDate;
     }
-
     public void setReleaseDate(String mReleaseDate) {
         this.mReleaseDate = mReleaseDate;
     }
@@ -166,7 +215,6 @@ public class Movie  implements Parcelable{
     public String getPosterPath() {
         return mPosterPath;
     }
-
     public void setPosterPath(String mPosterPath) {
         this.mPosterPath = mPosterPath;
     }
@@ -174,7 +222,6 @@ public class Movie  implements Parcelable{
     public float getPopularity() {
         return mPopularity;
     }
-
     public void setPopularity(float mPopularity) {
         this.mPopularity = mPopularity;
     }
@@ -182,15 +229,13 @@ public class Movie  implements Parcelable{
     public String getTitle() {
         return mTitle;
     }
-
     public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
-    public boolean ismVideo() {
+    public boolean isVideo() {
         return mVideo;
     }
-
     public void setVideo(boolean mVideo) {
         this.mVideo = mVideo;
     }
@@ -198,7 +243,6 @@ public class Movie  implements Parcelable{
     public int getVoteAverage() {
         return mVoteAverage;
     }
-
     public void setVoteAverage(int mVoteAverage) {
         this.mVoteAverage = mVoteAverage;
     }
@@ -206,7 +250,6 @@ public class Movie  implements Parcelable{
     public int getVoteCount() {
         return mVoteCount;
     }
-
     public void setVoteCount(int mVoteCount) {
         this.mVoteCount = mVoteCount;
     }

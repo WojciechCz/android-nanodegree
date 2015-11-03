@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.popularmovies.R;
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.utils.UtilMoviesApi;
+import com.example.popularmovies.views.adapters.callbacks.AdapterMoviesListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -23,9 +24,9 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.Holder> {
 
     private Context mContext;
     private List<Movie> movies;
-    private View.OnClickListener mCallback;
+    private AdapterMoviesListener mCallback;
 
-    public AdapterMovies(Context mContext, List<Movie> movies, View.OnClickListener callback) {
+    public AdapterMovies(Context mContext, List<Movie> movies, AdapterMoviesListener callback) {
         this.mContext = mContext;
         this.mCallback = callback;
         if (movies != null)
@@ -53,7 +54,7 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.Holder> {
         return movies.size();
     }
 
-    public class Holder extends RecyclerView.ViewHolder{
+    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView mMoviePoster;
         TextView mTitle;
 
@@ -61,7 +62,12 @@ public class AdapterMovies extends RecyclerView.Adapter<AdapterMovies.Holder> {
             super(itemView);
             mMoviePoster = (ImageView) itemView.findViewById(R.id.listItemMoviesGridImage);
             mTitle       = (TextView)  itemView.findViewById(R.id.listItemMoviesGridImageTitle);
-            itemView.setOnClickListener(mCallback);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mCallback.onItemClicked(getAdapterPosition(), v, movies.get(getAdapterPosition()));
         }
     }
 }

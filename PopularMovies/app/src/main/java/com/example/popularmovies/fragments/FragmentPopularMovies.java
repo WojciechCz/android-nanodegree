@@ -31,6 +31,7 @@ import com.example.popularmovies.views.adapters.AdapterMovies;
 import com.example.popularmovies.R;
 import com.example.popularmovies.activities.ActivityMain;
 import com.example.popularmovies.models.Movie;
+import com.example.popularmovies.views.adapters.callbacks.AdapterMoviesListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ import java.util.List;
  * Created by fares on 7/27/15.
  */
 public class FragmentPopularMovies extends Fragment implements
-        ActivityMain.PopularMoviesDataSetChange, View.OnClickListener {
+        ActivityMain.PopularMoviesDataSetChange, AdapterMoviesListener {
 
     public static final String SAVED_INSTANCE_MOVIES = "movies";
     public static final int COLUMN_SPAN = 3;
@@ -112,8 +113,8 @@ public class FragmentPopularMovies extends Fragment implements
     }
     // --------- clicked movie ---------
     @Override
-    public void onClick(View v) {
-        mCallback.onMovieClicked(mMoviesList.get(mMoviesGrid.indexOfChild(v)));
+    public void onItemClicked(int position, View v, Object o) {
+        mCallback.onMovieClicked((Movie) o);
     }
     // --------- --------- --------- ---------
 
