@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -27,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.example.popularmovies.fragments.FragmentMovieDetail;
@@ -296,7 +296,13 @@ public class ActivityMain extends AppCompatActivity implements
             return true;
         }
         else if (id == R.id.action_share) {
-
+            if (mSelectedMovieTrailers != null && !mSelectedMovieTrailers.isEmpty()) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, mSelectedMovieTrailers.get(0).getSite());
+                mShareActionProvider.setShareIntent(shareIntent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,6 +1,7 @@
 package com.example.popularmovies.fragments.interfaces;
 
-import android.widget.ShareActionProvider;
+
+import android.support.v7.widget.ShareActionProvider;
 
 import com.example.popularmovies.models.Movie;
 

@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -206,7 +207,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_movie_details, menu);
-        mCallback.registerShareProvider( (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider());
+        mCallback.registerShareProvider( MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share)) );
     }
     // ------- ------- ------- ------- ------- --
 }
