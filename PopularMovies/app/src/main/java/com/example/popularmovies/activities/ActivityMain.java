@@ -87,12 +87,9 @@ public class ActivityMain extends AppCompatActivity implements
     private int sortOrder;
     private boolean mIsDisplayingFavorite = false;
 
-    private ShareActionProvider mShareActionProvider;
-
-
-
     private PopularMoviesDataSetChange mDataSetChange;
     private SelectedMovieChange mSelectedMovieChange;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,17 +183,13 @@ public class ActivityMain extends AppCompatActivity implements
             e.printStackTrace();
         }
     }
-    @Override
-    public void registerShareProvider(ShareActionProvider provider){
-        mShareActionProvider = provider;
-    }
     // ------------- ------------------ -------------
     public void watchYoutubeVideo(String videoID){
         try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoID)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_app_link) + videoID)));
         }
         catch (ActivityNotFoundException e){
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoID)));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_web_link) + videoID)));
         }
     }
 
@@ -294,15 +287,6 @@ public class ActivityMain extends AppCompatActivity implements
                 item.setTitle(getString(R.string.title_activity_favorites));
             }
             return true;
-        }
-        else if (id == R.id.action_share) {
-            if (mSelectedMovieTrailers != null && !mSelectedMovieTrailers.isEmpty()) {
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, mSelectedMovieTrailers.get(0).getSite());
-                mShareActionProvider.setShareIntent(shareIntent);
-            }
         }
         return super.onOptionsItemSelected(item);
     }

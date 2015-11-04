@@ -11,5 +11,4 @@ import com.example.popularmovies.models.Movie;
 public interface CallbackFragmentMovieDetails {
     void onTrailerClicked(String youtubeVideoID);
     void onFavouriteButtonClicked(Movie movie);
-    void registerShareProvider(ShareActionProvider provider);
 }

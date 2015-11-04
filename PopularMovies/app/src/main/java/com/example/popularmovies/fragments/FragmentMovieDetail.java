@@ -1,19 +1,19 @@
 package com.example.popularmovies.fragments;
 
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.example.popularmovies.R;
@@ -22,8 +22,6 @@ import com.example.popularmovies.fragments.interfaces.CallbackFragmentMovieDetai
 import com.example.popularmovies.models.Movie;
 import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
-import com.example.popularmovies.models.db.DatabaseFavouriteMovies;
-import com.example.popularmovies.models.db.ProviderFavouriteMovies;
 import com.example.popularmovies.utils.ItemClickSupport;
 import com.example.popularmovies.utils.UtilDB;
 import com.example.popularmovies.utils.UtilMoviesApi;
@@ -55,6 +53,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
 
     private CallbackFragmentMovieDetails mCallback;
+    private ShareActionProvider mShareActionProvider;
 
     public static FragmentMovieDetail newInstance(CallbackFragmentMovieDetails callback, Movie selectedMovie,
                                                   List<Review> reviews, List<Trailer> trailers) {
@@ -102,6 +101,10 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null && reviews != null && trailers != null) {
             mSelectedMovieReviews.addAll(reviews);
             mSelectedMovieTrailers.addAll(trailers);
+            if (!mSelectedMovieTrailers.isEmpty() && mSelectedMovieTrailers.get(0) != null
+                    && mSelectedMovieTrailers.get(0).getKey() != null && mShareActionProvider != null){
+                setUpShareActionProvider(createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
+            }
             if (isViewsLinked()) {
                 setUpLists();
                 fillViewsWithData();
@@ -109,8 +112,10 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
 
                 if (mListReviews != null && mListReviews.getAdapter() != null)
                     ((AdapterReviews) mListReviews.getAdapter()).updateList(mSelectedMovieReviews);
-                if (mListTrailers != null && mListTrailers.getAdapter() != null)
+                if (mListTrailers != null && mListTrailers.getAdapter() != null) {
                     ((AdapterTrailers) mListTrailers.getAdapter()).updateList(mSelectedMovieTrailers);
+
+                }
             }
         }
     }
@@ -207,7 +212,26 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_movie_details, menu);
-        mCallback.registerShareProvider( MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share)) );
+
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+    }
+
+    private void setUpShareActionProvider(Intent shareIntent){
+        mShareActionProvider.setShareIntent(shareIntent);
+        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+            @Override
+            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                return false;
+            }
+        });
+    }
+
+    private Intent createShareIntent(@NonNull String shareString){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+        return shareIntent;
     }
     // ------- ------- ------- ------- ------- --
 }
