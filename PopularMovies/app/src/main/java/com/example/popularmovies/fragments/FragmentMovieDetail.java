@@ -39,6 +39,7 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     private String sortOrder;
 
     private Movie mMovie;
+    private Intent mShareIntent;
     private List<Review> mSelectedMovieReviews;
     private List<Trailer> mSelectedMovieTrailers;
 
@@ -98,13 +99,11 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     @Override
     public void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers, Intent shareIntent) {
         mMovie = movie;
+        mShareIntent = shareIntent;
         if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null && reviews != null && trailers != null) {
             mSelectedMovieReviews.addAll(reviews);
             mSelectedMovieTrailers.addAll(trailers);
-            if (!mSelectedMovieTrailers.isEmpty() && mSelectedMovieTrailers.get(0) != null
-                    && mSelectedMovieTrailers.get(0).getKey() != null && mShareActionProvider != null){
-                setUpShareActionProvider(shareIntent);
-            }
+
             if (isViewsLinked()) {
                 setUpLists();
                 fillViewsWithData();
@@ -119,6 +118,8 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
             }
         }
     }
+
+
 
     private void setUpLists(){
         if (mListReviews != null) {
@@ -214,6 +215,11 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
         inflater.inflate(R.menu.main_movie_details, menu);
 
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+        if (!mSelectedMovieTrailers.isEmpty() && mSelectedMovieTrailers.get(0) != null )
+            if (mSelectedMovieTrailers.get(0).getKey() != null)
+                if (mShareActionProvider != null && mShareIntent != null){
+                    setUpShareActionProvider(mShareIntent);
+                }
     }
 
     private void setUpShareActionProvider(Intent shareIntent){
