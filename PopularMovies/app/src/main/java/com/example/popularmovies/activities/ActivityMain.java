@@ -44,6 +44,7 @@ import com.example.popularmovies.utils.UtilDB;
 import com.example.popularmovies.utils.UtilFragment;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
+import com.example.popularmovies.utils.Utilities;
 import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
 
@@ -59,7 +60,7 @@ import java.util.List;
 public class ActivityMain extends AppCompatActivity implements
         UtilMoviesApi.PopularMovies, CallbackFragmentPopularMovies, CallbackFragmentMovieDetails {
 
-    public static final String LOG_DEBUG = "saarna";
+    private static final String LOG_DEBUG = ActivityMain.class.getSimpleName();
 
     public static final String SAVED_INSTANCE_MOVIE = "movie";
     public static final String SAVED_INSTANCE_MOVIES = "movies";
@@ -174,7 +175,7 @@ public class ActivityMain extends AppCompatActivity implements
     }
     @Override
     public void onTrailerClicked(String youtubeVideoID) {
-        watchYoutubeVideo(youtubeVideoID);
+        Utilities.watchYoutubeVideo(this, youtubeVideoID);
     }
 
     @Override
@@ -187,14 +188,6 @@ public class ActivityMain extends AppCompatActivity implements
         }
     }
     // ------------- ------------------ -------------
-    public void watchYoutubeVideo(String videoID){
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_app_link) + videoID)));
-        }
-        catch (ActivityNotFoundException e){
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_web_link) + videoID)));
-        }
-    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

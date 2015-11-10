@@ -28,10 +28,14 @@ public class UtilMoviesApi {
         new GetMovieDetails(callback).execute(apiK, movieId);
     }
 
-    public interface PopularMovies{
-        void onPopularMoviesJsonReceived(String json);
-        void onMovieDetailsReceived(String[] json);
+    public interface PopularMovieDetails{
+        void onMovieDetailsReceived(String[] jsons);
     }
+
+    public interface PopularMovies extends PopularMovieDetails{
+        void onPopularMoviesJsonReceived(String jsons);
+    }
+
 
     private class GetPopularMoviesJson extends AsyncTask<String, Void, String> {
 
