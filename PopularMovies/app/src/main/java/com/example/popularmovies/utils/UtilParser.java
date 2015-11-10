@@ -67,14 +67,13 @@ public class UtilParser {
             Movie movie;
             Gson gson = new Gson();
 
-//            Log.d("test", "----------------------- parsing in progress:");
-            for (int i = 0; i < jsonMoviesList.size(); i++){
-                jsonMovie = jsonMoviesList.get(i);
-                movie = gson.fromJson(jsonMovie, Movie.class);
-//                Log.d("test", movie.toString());
-                moviesList.add(movie);
+            if (jsonMoviesList != null && jsonMoviesList.size() > 0) {
+                for (int i = 0; i < jsonMoviesList.size(); i++) {
+                    jsonMovie = jsonMoviesList.get(i);
+                    movie = gson.fromJson(jsonMovie, Movie.class);
+                    moviesList.add(movie);
+                }
             }
-//            Log.d("test", "----------------------- done");
             return moviesList;
         }
     }
@@ -92,10 +91,12 @@ public class UtilParser {
             Review review;
             Gson gson = new Gson();
 
-            for (int i = 0; i < jsonReviewsList.size(); i++){
-                jsonReview = jsonReviewsList.get(i);
-                review = gson.fromJson(jsonReview, Review.class);
-                reviewList.add(review);
+            if (jsonReviewsList != null && jsonReviewsList.size() > 0) {
+                for (int i = 0; i < jsonReviewsList.size(); i++){
+                    jsonReview = jsonReviewsList.get(i);
+                    review = gson.fromJson(jsonReview, Review.class);
+                    reviewList.add(review);
+                }
             }
             return reviewList;
         }
@@ -114,10 +115,12 @@ public class UtilParser {
             Trailer trailer;
             Gson gson = new Gson();
 
-            for (int i = 0; i < jsonTrailersList.size(); i++){
-                jsonTrailer = jsonTrailersList.get(i);
-                trailer = gson.fromJson(jsonTrailer, Trailer.class);
-                trailerList.add(trailer);
+            if (jsonTrailersList != null && jsonTrailersList.size() > 0) {
+                for (int i = 0; i < jsonTrailersList.size(); i++) {
+                    jsonTrailer = jsonTrailersList.get(i);
+                    trailer = gson.fromJson(jsonTrailer, Trailer.class);
+                    trailerList.add(trailer);
+                }
             }
             return trailerList;
         }
