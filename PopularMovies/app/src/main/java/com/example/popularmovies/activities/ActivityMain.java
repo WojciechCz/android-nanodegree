@@ -143,9 +143,10 @@ public class ActivityMain extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_INSTANCE_ACTIVE_FRAGMENT, activeFragment);
         if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+            if (selectedMovie != null)
             outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
-        outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
-//        getSupportFragmentManager().putFragment(outState, SAVED_INSTANCE_FRAGMENT, (FragmentPopularMovies)mDataSetChange);
+        if (movies != null)
+            outState.putParcelableArrayList(SAVED_INSTANCE_MOVIES, new ArrayList<Parcelable>(movies));
         super.onSaveInstanceState(outState);
     }
 
