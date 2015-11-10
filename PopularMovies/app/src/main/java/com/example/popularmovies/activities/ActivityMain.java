@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -432,9 +433,20 @@ public class ActivityMain extends AppCompatActivity implements
             if (selectedMovie == null)
                 selectedMovie = movies.get(0);
             if (mSelectedMovieChange != null)
-                mSelectedMovieChange.onSelectedMovieChange(selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
+                mSelectedMovieChange.onSelectedMovieChange(selectedMovie,
+                        mSelectedMovieReviews,
+                        mSelectedMovieTrailers,
+                        createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
         }
         forceOpenFragment(FRAGMENT_MOVIE_DETAIL);
+    }
+
+    private Intent createShareIntent(@NonNull String shareString){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+        return shareIntent;
     }
 
     public interface PopularMoviesDataSetChange {
@@ -443,6 +455,6 @@ public class ActivityMain extends AppCompatActivity implements
         void onPopularMoviesRequest();
     }
     public interface SelectedMovieChange {
-        void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers);
+        void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers, Intent shareIntent);
     }
 }

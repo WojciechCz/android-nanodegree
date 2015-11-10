@@ -96,14 +96,14 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
     }
 
     @Override
-    public void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers) {
+    public void onSelectedMovieChange(Movie movie, List<Review> reviews, List<Trailer> trailers, Intent shareIntent) {
         mMovie = movie;
         if (mSelectedMovieReviews != null && mSelectedMovieTrailers != null && reviews != null && trailers != null) {
             mSelectedMovieReviews.addAll(reviews);
             mSelectedMovieTrailers.addAll(trailers);
             if (!mSelectedMovieTrailers.isEmpty() && mSelectedMovieTrailers.get(0) != null
                     && mSelectedMovieTrailers.get(0).getKey() != null && mShareActionProvider != null){
-                setUpShareActionProvider(createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
+                setUpShareActionProvider(shareIntent);
             }
             if (isViewsLinked()) {
                 setUpLists();
@@ -224,14 +224,6 @@ public class FragmentMovieDetail extends Fragment implements ActivityMain.Select
                 return false;
             }
         });
-    }
-
-    private Intent createShareIntent(@NonNull String shareString){
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
-        return shareIntent;
     }
     // ------- ------- ------- ------- ------- --
 }
