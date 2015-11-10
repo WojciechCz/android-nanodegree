@@ -41,6 +41,7 @@ import com.example.popularmovies.models.Review;
 import com.example.popularmovies.models.Trailer;
 import com.example.popularmovies.models.db.ProviderFavouriteMovies;
 import com.example.popularmovies.utils.UtilDB;
+import com.example.popularmovies.utils.UtilFragment;
 import com.example.popularmovies.utils.UtilMoviesApi;
 import com.example.popularmovies.utils.UtilParser;
 import com.google.gson.JsonParseException;
@@ -69,8 +70,8 @@ public class ActivityMain extends AppCompatActivity implements
     private Fragment currentFratgment;
 
 
-    public static final int FRAGMENT_POPULAR_MOVIES = 0;
-    public static final int FRAGMENT_MOVIE_DETAIL   = 1;
+//    public static final int UtilFragment.FRAGMENT_POPULAR_MOVIES = 0;
+//    public static final int UtilFragment.FRAGMENT_MOVIE_DETAIL   = 1;
 
     public static final int MOVIES_SORT_POPULAR = 1;
     public static final int MOVIES_SORT_RATED   = 2;
@@ -113,7 +114,7 @@ public class ActivityMain extends AppCompatActivity implements
                 selectedMovie = savedInstanceState.getParcelable(SAVED_INSTANCE_MOVIE);
                 if (movies == null || movies.isEmpty())
                     movies = savedInstanceState.getParcelableArrayList(SAVED_INSTANCE_MOVIES);
-                if (selectedMovie != null && activeFragment == FRAGMENT_MOVIE_DETAIL)
+                if (selectedMovie != null && activeFragment == UtilFragment.FRAGMENT_MOVIE_DETAIL)
                     toolbarImageShow();
             }
             else {
@@ -121,14 +122,14 @@ public class ActivityMain extends AppCompatActivity implements
                 // set callback popular movies and start download movies
                 mDataSetChange = fpm;
                 // open detail
-                openFragment(FRAGMENT_MOVIE_DETAIL);
+                openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
                 downloadMovies();
             }
         }
         // one pane layout
         else {
             mTwoPane = false;
-            openFragment(FRAGMENT_POPULAR_MOVIES);
+            openFragment(UtilFragment.FRAGMENT_POPULAR_MOVIES);
             downloadMovies();
         }
     }
@@ -143,7 +144,7 @@ public class ActivityMain extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_INSTANCE_ACTIVE_FRAGMENT, activeFragment);
-        if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+        if (activeFragment == UtilFragment.FRAGMENT_MOVIE_DETAIL)
             if (selectedMovie != null)
             outState.putParcelable(SAVED_INSTANCE_MOVIE, selectedMovie);
         if (movies != null)
@@ -342,13 +343,13 @@ public class ActivityMain extends AppCompatActivity implements
     private Fragment getFragment(int fragmentType) {
         Fragment frag;
         switch (fragmentType) {
-            case FRAGMENT_POPULAR_MOVIES:
+            case UtilFragment.FRAGMENT_POPULAR_MOVIES:
                 if (movies == null)
                     movies = new LinkedList<>();
                 frag = FragmentPopularMovies.newInstance(movies, this);
                 mDataSetChange = (FragmentPopularMovies) frag;
                 return frag;
-            case FRAGMENT_MOVIE_DETAIL:
+            case UtilFragment.FRAGMENT_MOVIE_DETAIL:
                 toolbarImageShow();
                 frag = FragmentMovieDetail.newInstance(this, selectedMovie, mSelectedMovieReviews, mSelectedMovieTrailers);
                 mSelectedMovieChange = (FragmentMovieDetail) frag;
@@ -362,7 +363,7 @@ public class ActivityMain extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (activeFragment == FRAGMENT_POPULAR_MOVIES) {
+        if (activeFragment == UtilFragment.FRAGMENT_POPULAR_MOVIES) {
             finish();
         }
         else {
@@ -370,15 +371,15 @@ public class ActivityMain extends AppCompatActivity implements
                 toolbarImageHide();
             }
             // return to main fragment
-            openFragment(FRAGMENT_POPULAR_MOVIES);
+            openFragment(UtilFragment.FRAGMENT_POPULAR_MOVIES);
         }
     }
 
     public void setCollapsingToolbarBehaviour(){
         if (!mTwoPane) {
-            if (activeFragment == FRAGMENT_MOVIE_DETAIL)
+            if (activeFragment == UtilFragment.FRAGMENT_MOVIE_DETAIL)
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true);
-            if (activeFragment == FRAGMENT_POPULAR_MOVIES)
+            if (activeFragment == UtilFragment.FRAGMENT_POPULAR_MOVIES)
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(false);
         }
     }
@@ -410,7 +411,7 @@ public class ActivityMain extends AppCompatActivity implements
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
         if (!mTwoPane)
-            openFragment(FRAGMENT_MOVIE_DETAIL);
+            openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
         updateMovieDetails();
     }
     // ---------------- HTTP REQUEST RESULT ----------------
@@ -438,7 +439,7 @@ public class ActivityMain extends AppCompatActivity implements
                         mSelectedMovieTrailers,
                         createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
         }
-        forceOpenFragment(FRAGMENT_MOVIE_DETAIL);
+        forceOpenFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
     }
 
     private Intent createShareIntent(@NonNull String shareString){
