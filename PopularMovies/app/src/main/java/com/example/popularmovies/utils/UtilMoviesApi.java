@@ -24,7 +24,7 @@ public class UtilMoviesApi {
         new GetPopularMoviesJson(callback).execute(apiK);
     }
 
-    public void getDetailsJson(@NonNull PopularMovies callback, @NonNull String apiK, @NonNull String movieId){
+    public void getDetailsJson(@NonNull PopularMovieDetails callback, @NonNull String apiK, @NonNull String movieId){
         new GetMovieDetails(callback).execute(apiK, movieId);
     }
 
@@ -71,9 +71,9 @@ public class UtilMoviesApi {
 
     private class GetMovieDetails extends AsyncTask<String, Void, String[]> {
 
-        private PopularMovies mCallback;
+        private PopularMovieDetails mCallback;
 
-        public GetMovieDetails(@NonNull PopularMovies mCallback) {
+        public GetMovieDetails(@NonNull PopularMovieDetails mCallback) {
             this.mCallback = mCallback;
         }
 

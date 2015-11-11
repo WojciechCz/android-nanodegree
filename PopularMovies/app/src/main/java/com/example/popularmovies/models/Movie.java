@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Created by fares on 7/27/15.
  */
-public class Movie  implements Parcelable{
+public class Movie  implements Parcelable {
     @SerializedName("adult")             private boolean mAdult;
     @SerializedName("backdrop_path")     private String mBackdropPath;
     @SerializedName("genre_ids")         private int[] mGenreIds;

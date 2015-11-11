@@ -354,20 +354,6 @@ public class ActivityMain extends AppCompatActivity implements
         return null;
     }
 
-    @Override
-    public void onBackPressed() {
-        if (activeFragment == UtilFragment.FRAGMENT_POPULAR_MOVIES) {
-            finish();
-        }
-        else {
-            if (collapsingToolbarImageVisible){
-                toolbarImageHide();
-            }
-            // return to main fragment
-            openFragment(UtilFragment.FRAGMENT_POPULAR_MOVIES);
-        }
-    }
-
     public void setCollapsingToolbarBehaviour(){
         if (!mTwoPane) {
             if (activeFragment == UtilFragment.FRAGMENT_MOVIE_DETAIL)
@@ -404,9 +390,12 @@ public class ActivityMain extends AppCompatActivity implements
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
         if (!mTwoPane) {
-            startActivity(new Intent(this, ActivityDetail.class));
+            Intent detailIntent = new Intent(this, ActivityDetail.class);
+            detailIntent.putExtra(Utilities.INTENT_MOVIE_KEY, selectedMovie);
+            startActivity(detailIntent);
         }
-        updateMovieDetails();
+        else
+            updateMovieDetails();
     }
     // ---------------- HTTP REQUEST RESULT ----------------
 
@@ -427,21 +416,13 @@ public class ActivityMain extends AppCompatActivity implements
         if (movies != null && !movies.isEmpty()) {
             if (selectedMovie == null)
                 selectedMovie = movies.get(0);
-            if (mSelectedMovieChange != null)
+            if (mSelectedMovieChange != null && mSelectedMovieTrailers != null && mSelectedMovieTrailers.get(0) != null)
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie,
                         mSelectedMovieReviews,
                         mSelectedMovieTrailers,
-                        createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
+                        Utilities.createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
         }
         forceOpenFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
-    }
-
-    private Intent createShareIntent(@NonNull String shareString){
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
-        return shareIntent;
     }
 
     public interface PopularMoviesDataSetChange {

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.example.popularmovies.R;
 
@@ -21,5 +22,13 @@ public class Utilities {
         catch (ActivityNotFoundException e){
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.youtube_web_link) + videoID)));
         }
+    }
+
+    public static Intent createShareIntent(@NonNull String shareString){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareString);
+        return shareIntent;
     }
 }

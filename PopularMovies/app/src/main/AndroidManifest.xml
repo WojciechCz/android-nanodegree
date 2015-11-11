@@ -29,6 +29,15 @@
                 android:value="com.example.popularmovies.activities.ActivityMain" />
         </activity>
 
+        <activity
+            android:name=".activities.ActivityDetail"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".activities.ActivityMain" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.popularmovies.activities.ActivityMain" />
+        </activity>
+
         <provider
             android:name="com.example.popularmovies.models.db.generated.ProviderFavouriteMovies"
             android:authorities="com.example.popularmovies.models.db.ProviderFavouriteMovies"

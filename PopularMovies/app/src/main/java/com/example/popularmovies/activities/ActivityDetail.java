@@ -55,14 +55,38 @@ public class ActivityDetail extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         setUpToolbar();
 
-        Intent intent = getIntent();
-        if (intent != null){
-            selectedMovie = intent.getExtras().getParcelable(Utilities.INTENT_MOVIE_KEY);
+        Bundle extras = null;
+        if (getIntent()!= null)
+            extras = getIntent().getExtras();
+        if (extras != null){
+            selectedMovie = extras.getParcelable(Utilities.INTENT_MOVIE_KEY);
+            if (selectedMovie != null && selectedMovie.getId() > 0)
+                downloadMovieDetails(String.valueOf(selectedMovie.getId()));
         }
         openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
+    }
+
+    private void downloadMovieDetails(String movieId) {
+        new UtilMoviesApi().getDetailsJson(this, getString(R.string.MOVIE_API_KEY), movieId);
+    }
+
+    private void updateMovieDetails(){
+        if (mSelectedMovieChange != null)
+            mSelectedMovieChange.onSelectedMovieChange(selectedMovie,
+                    mSelectedMovieReviews,
+                    mSelectedMovieTrailers,
+                    Utilities.createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
+
+        forceOpenFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
+    }
+
+    private void forceOpenFragment(int fragId){
+        activeFragment = -1;
+        openFragment(fragId);
     }
 
     public void openFragment(int fragmentType) {
@@ -147,6 +171,8 @@ public class ActivityDetail extends AppCompatActivity
             else {
                 mSelectedMovieTrailers = new UtilParser().jsonParserTrailers(jsons[1]);
             }
+
+            updateMovieDetails();
         } catch (JsonParseException e) {
             e.printStackTrace();
         }
