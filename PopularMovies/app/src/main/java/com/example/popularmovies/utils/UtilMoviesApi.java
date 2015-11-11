@@ -14,14 +14,19 @@ import java.io.IOException;
  */
 public class UtilMoviesApi {
 
-    private static final String MOVIE_API = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
+    private static final String MOVIE_API_POPULARITY = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
+    private static final String MOVIE_API_VOTE_AVERAGE = "http://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=";
     private static final String REVIEWS_API = "http://api.themoviedb.org/3/movie/%s/reviews?api_key=";
     private static final String TRAILERS_API = "http://api.themoviedb.org/3/movie/%s/videos?api_key=";
     public static final String URL_POSTER = "http://image.tmdb.org/t/p/w185";
 
+    public enum SortByType {
+        Popularity, Average
+    }
 
-    public void getPopularMoviesJson(@NonNull PopularMovies callback, @NonNull String apiK){
-        new GetPopularMoviesJson(callback).execute(apiK);
+
+    public void getPopularMoviesJson(@NonNull PopularMovies callback, @NonNull String apiK, SortByType mSortByType){
+        new GetPopularMoviesJson(callback, mSortByType).execute(apiK);
     }
 
     public void getDetailsJson(@NonNull PopularMovieDetails callback, @NonNull String apiK, @NonNull String movieId){
@@ -31,7 +36,6 @@ public class UtilMoviesApi {
     public interface PopularMovieDetails{
         void onMovieDetailsReceived(String[] jsons);
     }
-
     public interface PopularMovies extends PopularMovieDetails{
         void onPopularMoviesJsonReceived(String jsons);
     }
@@ -40,24 +44,35 @@ public class UtilMoviesApi {
     private class GetPopularMoviesJson extends AsyncTask<String, Void, String> {
 
         private PopularMovies mCallback;
+        private SortByType mSortByType;
 
-        public GetPopularMoviesJson(@NonNull PopularMovies mCallback) {
+        public GetPopularMoviesJson(@NonNull PopularMovies mCallback, SortByType mSortByType) {
             this.mCallback = mCallback;
+            this.mSortByType = mSortByType;
         }
 
         @Override
         protected String doInBackground(String... param) {
-            String url = MOVIE_API + param[0];
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
+            String url = null;
+            if (mSortByType == SortByType.Popularity){
+                url = MOVIE_API_POPULARITY + param[0];
+            }
+            else if (mSortByType == SortByType.Average){
+                url = MOVIE_API_VOTE_AVERAGE + param[0];
+            }
 
-            try {
-                Response response = client.newCall(request).execute();
-                return response.body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (url != null) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }

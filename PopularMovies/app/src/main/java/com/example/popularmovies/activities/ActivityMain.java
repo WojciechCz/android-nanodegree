@@ -124,7 +124,7 @@ public class ActivityMain extends AppCompatActivity implements
                 mDataSetChange = fpm;
                 // open detail
                 openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
-                downloadMovies();
+//                downloadMoviesSortedByPreferences();
             }
         }
         // one pane layout
@@ -159,8 +159,9 @@ public class ActivityMain extends AppCompatActivity implements
         if ( (movies == null || movies.isEmpty()) && !isNetworkAvailable()){
             Toast.makeText(this, "No internet connection !", Toast.LENGTH_LONG).show();
         }
-        setSortOrderFromPrefs();
-        changeSortOrderAndSort();
+
+        if (setSortOrderFromPrefs())
+            downloadMoviesSortedByPreferences();
     }
 
     // ------------- Fragment callbacks ------------------
@@ -195,47 +196,23 @@ public class ActivityMain extends AppCompatActivity implements
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private void setSortOrderFromPrefs(){
+    private boolean setSortOrderFromPrefs(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String sortingOrder = prefs.getString(getResources().getString(R.string.sorting_order_key), "");
         if (sortingOrder != null) {
+            int newSortOrder = -1;
             if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[0])) {
-                sortOrder = MOVIES_SORT_POPULAR;
+                newSortOrder = MOVIES_SORT_POPULAR;
             }
             else if (sortingOrder.equals(getResources().getStringArray(R.array.entries_values_sorting_order)[1])) {
-                sortOrder = MOVIES_SORT_RATED;
+                newSortOrder = MOVIES_SORT_RATED;
+            }
+            if (sortOrder != newSortOrder){
+                sortOrder = newSortOrder;
+                return true;
             }
         }
-    }
-
-    private void changeSortOrderAndSort() {
-        if (movies != null && mDataSetChange != null) {
-            if (sortOrder == MOVIES_SORT_POPULAR) {
-                Collections.sort(movies, new Comparator<Movie>() {
-                    public int compare(Movie one, Movie two) {
-                        float diff = one.getPopularity() - two.getPopularity();
-                        if (diff > 0)
-                            return 1;
-                        else if (diff < 0)
-                            return -1;
-                        return 0;
-                    }
-                });
-                mDataSetChange.onPopularMoviesDataSetChange(movies);
-            } else if (sortOrder == MOVIES_SORT_RATED) {
-                Collections.sort(movies, new Comparator<Movie>() {
-                    public int compare(Movie one, Movie two) {
-                        float diff = one.getVoteCount() - two.getVoteCount();
-                        if (diff > 0)
-                            return 1;
-                        else if (diff < 0)
-                            return -1;
-                        return 0;
-                    }
-                });
-                mDataSetChange.onPopularMoviesDataSetChange(movies);
-            }
-        }
+        return false;
     }
 
     private void toolbarImageShow() {
@@ -295,8 +272,17 @@ public class ActivityMain extends AppCompatActivity implements
         mDataSetChange.onPopularMoviesRequest();
     }
 
+    private void downloadMoviesSortedByPreferences() {
+        if (sortOrder == MOVIES_SORT_RATED)
+            downloadMoviesVoteAverage();
+        if (sortOrder == MOVIES_SORT_POPULAR)
+            downloadMovies();
+    }
     private void downloadMovies() {
-        new UtilMoviesApi().getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY));
+        new UtilMoviesApi().getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY), UtilMoviesApi.SortByType.Popularity);
+    }
+    private void downloadMoviesVoteAverage() {
+        new UtilMoviesApi().getPopularMoviesJson(this, getString(R.string.MOVIE_API_KEY), UtilMoviesApi.SortByType.Average);
     }
     private void downloadMovieDetails(String movieId) {
         new UtilMoviesApi().getDetailsJson(this, getString(R.string.MOVIE_API_KEY), movieId);
@@ -388,7 +374,7 @@ public class ActivityMain extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
+        Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES REVIEWS & TRAILERS");
         if (!mTwoPane) {
             Intent detailIntent = new Intent(this, ActivityDetail.class);
             detailIntent.putExtra(Utilities.INTENT_MOVIE_KEY, selectedMovie);
@@ -408,7 +394,6 @@ public class ActivityMain extends AppCompatActivity implements
             }
             // for movie list
             mDataSetChange.onPopularMoviesDataSetChange(movies);
-            changeSortOrderAndSort();
         }
     }
 
@@ -416,11 +401,16 @@ public class ActivityMain extends AppCompatActivity implements
         if (movies != null && !movies.isEmpty()) {
             if (selectedMovie == null)
                 selectedMovie = movies.get(0);
-            if (mSelectedMovieChange != null && mSelectedMovieTrailers != null && mSelectedMovieTrailers.get(0) != null)
+            if (mSelectedMovieChange != null) {
+                Intent shareLink = null;
+                if (mSelectedMovieTrailers != null && !mSelectedMovieTrailers.isEmpty() && mSelectedMovieTrailers.get(0) != null)
+                    shareLink = Utilities.createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey());
+
                 mSelectedMovieChange.onSelectedMovieChange(selectedMovie,
                         mSelectedMovieReviews,
                         mSelectedMovieTrailers,
-                        Utilities.createShareIntent(getString(R.string.youtube_web_link) + mSelectedMovieTrailers.get(0).getKey()));
+                        shareLink);
+            }
         }
         forceOpenFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
     }
