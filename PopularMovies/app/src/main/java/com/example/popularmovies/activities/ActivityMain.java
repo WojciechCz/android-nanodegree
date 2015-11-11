@@ -403,8 +403,9 @@ public class ActivityMain extends AppCompatActivity implements
         }
 
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
-        if (!mTwoPane)
-            openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
+        if (!mTwoPane) {
+            startActivity(new Intent(this, ActivityDetail.class));
+        }
         updateMovieDetails();
     }
     // ---------------- HTTP REQUEST RESULT ----------------

@@ -51,6 +51,7 @@ public class ActivityDetail extends AppCompatActivity
     private List<Review> mSelectedMovieReviews;
     private List<Trailer> mSelectedMovieTrailers;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,7 @@ public class ActivityDetail extends AppCompatActivity
         if (intent != null){
             selectedMovie = intent.getExtras().getParcelable(Utilities.INTENT_MOVIE_KEY);
         }
+        openFragment(UtilFragment.FRAGMENT_MOVIE_DETAIL);
     }
 
     public void openFragment(int fragmentType) {
@@ -130,12 +132,24 @@ public class ActivityDetail extends AppCompatActivity
         @Override
     public void onMovieDetailsReceived(String[] jsons) {
         try {
-            mSelectedMovieReviews = new UtilParser().jsonParserReviews(jsons[0]);
-            mSelectedMovieTrailers = new UtilParser().jsonParserTrailers(jsons[1]);
+            if (mSelectedMovieReviews != null) {
+                mSelectedMovieReviews.clear();
+                mSelectedMovieReviews.addAll(new UtilParser().jsonParserReviews(jsons[0]));
+            }
+            else {
+                mSelectedMovieReviews = new UtilParser().jsonParserReviews(jsons[0]);
+            }
+
+            if (mSelectedMovieTrailers != null){
+                mSelectedMovieTrailers.clear();
+                mSelectedMovieTrailers.addAll(new UtilParser().jsonParserTrailers(jsons[1]));
+            }
+            else {
+                mSelectedMovieTrailers = new UtilParser().jsonParserTrailers(jsons[1]);
+            }
         } catch (JsonParseException e) {
             e.printStackTrace();
         }
-
         Log.d(LOG_DEBUG, "DOWNLOADED & PARSED MOVIES");
     }
 }
