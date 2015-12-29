@@ -7,17 +7,14 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="tomorrow">Tomorrow</string>
-    <string name="champions_league">UEFA Champions League</string>
-    <string name="bundesliga">Bundesliga</string>
-    <string name="premierleague">Premier League</string>
-    <string name="primeradivison">Primera Division</string>
-    <string name="seriaa">Serie A</string>
-    <string name="matchday_text">Match day</string>
-    <string name="group_stage_text">Group stages</string>
+
+    <string name="matchday_text">Match day : %d</string>
+    <string name="group_stage_text">Group Stages, Matchday : 6</string>
     <string name="first_knockout_round">First knockout round</string>
     <string name="quarter_final">Quarter Final</string>
     <string name="semi_final">Semi Final</string>
     <string name="final_text">Final</string>
+
     <string name="share_text">Share</string>
     <string name="about">About</string>
     <string name="title_activity_about" translatable="false">AboutActivity</string>
@@ -35,5 +32,25 @@
     <string name="content_desc_share_text">Click for share match score</string>
     <string name="empty_scores_list">No downloaded data.</string>
     <string name="title_widget_scores">Football scores</string>
+
+    <!-- league names -->
+    <string name="serie_a"          translatable="false">Seria A</string>
+    <string name="premier_league"   translatable="false">Premier League</string>
+    <string name="uefa_champions_league"  translatable="false">UEFA Champions League</string>
+    <string name="primera_division" translatable="false">Primera Division</string>
+    <string name="bundesliga"       translatable="false">Bundesliga</string>
+    <string name="uknown_league"    translatable="false">Not known League Please report</string>
+
+    <!-- team names -->
+    <string name="arsenal_london">Arsenal London FC</string>
+    <string name="machester_united">Manchester United FC</string>
+    <string name="swansea_city">Swansea City</string>
+    <string name="leicester_city">Leicester City</string>
+    <string name="everton_fc">Everton FC</string>
+    <string name="west_ham_united">West Ham United FC</string>
+    <string name="tottenham_hotspur">Tottenham Hotspur FC</string>
+    <string name="west_bromwich_albion">West Bromwich Albion</string>
+    <string name="sunderland_afc">Sunderland AFC</string>
+    <string name="stoke_city_fc">Stoke City FC</string>
 
 </resources>

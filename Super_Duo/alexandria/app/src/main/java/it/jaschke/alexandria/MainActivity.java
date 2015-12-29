@@ -165,9 +165,9 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    public void goBack(View view){
-        getSupportFragmentManager().popBackStack();
-    }
+//    public void goBack(View view){
+//        getSupportFragmentManager().popBackStack();
+//    }
 
     private boolean isTablet() {
         return (getApplicationContext().getResources().getConfiguration().screenLayout
