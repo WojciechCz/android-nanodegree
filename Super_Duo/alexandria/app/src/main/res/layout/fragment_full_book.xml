@@ -6,6 +6,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
         <ScrollView android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:fillViewport="false"
@@ -53,7 +54,6 @@
                     android:layout_toRightOf="@+id/fullBookCover"
                     android:layout_toEndOf="@+id/fullBookCover"/>
 
-
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -63,7 +63,6 @@
                     android:layout_below="@+id/fullBookCover"
                     android:layout_margin="10dp"
                     />
-
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -88,20 +87,6 @@
                         android:textStyle="bold"
                         android:gravity="right|top"/>
                 </LinearLayout>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/back_button"
-                    android:id="@+id/backButton"
-                    android:onClick="goBack"
-                    android:src="@drawable/ic_action_undo"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_gravity="right|top"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignRight="@+id/fullBookTitle"
-                    android:layout_alignEnd="@+id/fullBookTitle"/>
-
 
             </RelativeLayout>
 
