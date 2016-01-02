@@ -13,7 +13,7 @@ public class Joke {
             "CNN was originally created as the \"Chuck Norris Network\" to update Americans with on-the-spot ass kicking in real-time."
     };
 
-    private int mCounter = 0;
+    private static int mCounter = 0;
 
     public String[] getAll(){
         return mJokes;
