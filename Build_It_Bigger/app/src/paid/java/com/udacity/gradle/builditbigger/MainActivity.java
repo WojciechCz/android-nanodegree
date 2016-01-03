@@ -1,14 +1,12 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.fares.displayjoke.ActivityDisplayJoke;
 
@@ -20,6 +18,7 @@ public class MainActivity extends AppCompatActivity
 
     private List<String> mJokes;
     private UpdateViewMainFragment mUpdateViewMainFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startActivityDisplayJoke(List<String> jokes){
         Intent showJoke = new Intent(this, ActivityDisplayJoke.class);
-        showJoke.putExtra(ActivityDisplayJoke.JOKE_EXTRAS, jokes.toArray(new String[jokes.size()]));
+        showJoke.putExtra(ActivityDisplayJoke.JOKE_EXTRAS, mJokes.toArray(new String[mJokes.size()]));
         startActivity(showJoke);
     }
 

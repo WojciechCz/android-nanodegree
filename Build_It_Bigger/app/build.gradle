@@ -18,6 +18,10 @@ android {
         }
     }
 
+    buildTypes.each {
+        it.buildConfigField 'String', 'TEST_DEVICE_ID', BuildItBigger_InterstitalAdTestDevice
+    }
+
     productFlavors{
         free {
             applicationId "com.udacity.gradle.builditbigger.free"

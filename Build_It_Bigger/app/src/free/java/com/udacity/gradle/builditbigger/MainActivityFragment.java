@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +24,6 @@ import butterknife.OnClick;
 public class MainActivityFragment extends Fragment implements UpdateViewMainFragment {
 
     private MainFragmentCallback mMainFragmentCallback;
-//    private InterstitialAd mInterstitialAd;
 
 
     @Bind(R.id.progressBar) ProgressBar mProgressBar;
