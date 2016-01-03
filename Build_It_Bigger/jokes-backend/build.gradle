@@ -30,7 +30,6 @@ dependencies {
 }
 
 appengine {
-    httpAddress = "0.0.0.0"
 
     downloadSdk = true
     appcfg {
