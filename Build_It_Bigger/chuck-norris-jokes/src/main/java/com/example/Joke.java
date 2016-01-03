@@ -23,4 +23,10 @@ public class Joke {
         return mJokes[mCounter++%mJokes.length];
     }
 
+    public String getJokeAt(int position){
+        if (position >= 0 && position < mJokes.length)
+            return mJokes[position];
+        return null;
+    }
+
 }
