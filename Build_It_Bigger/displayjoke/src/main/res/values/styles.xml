@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonNextJoke">
+        <item name="android:visibility">gone</item>
+        <item name="android:text">@string/ButtonNextJoke</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+</resources>
