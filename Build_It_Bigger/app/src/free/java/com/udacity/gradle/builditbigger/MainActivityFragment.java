@@ -23,6 +23,8 @@ import butterknife.OnClick;
 public class MainActivityFragment extends Fragment implements UpdateViewMainFragment {
 
     private MainFragmentCallback mMainFragmentCallback;
+//    private InterstitialAd mInterstitialAd;
+
 
     @Bind(R.id.progressBar) ProgressBar mProgressBar;
     @Bind(R.id.tellJoke)    Button mTellJoke;
