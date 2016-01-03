@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.Joke;
@@ -16,6 +17,7 @@ import com.example.fares.displayjoke.ActivityDisplayJoke;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -23,9 +25,23 @@ import butterknife.OnClick;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements UpdateViewMainFragment {
 
-    public MainActivityFragment() {
+    private MainFragmentCallback mMainFragmentCallback;
+
+    @Bind(R.id.progressBar) ProgressBar mProgressBar;
+    @Bind(R.id.tellJoke)    Button mTellJoke;
+
+    @Override
+    public void onAttach(Context context) throws ClassCastException {
+        super.onAttach(context);
+        mMainFragmentCallback = (MainFragmentCallback) context;
+    }
+
+    public static MainActivityFragment getInstance(MainFragmentCallback mainFragmentCallback){
+        MainActivityFragment f = new MainActivityFragment();
+        f.mMainFragmentCallback = mainFragmentCallback;
+        return f;
     }
 
     @Override
@@ -46,14 +62,24 @@ public class MainActivityFragment extends Fragment {
 
     @OnClick(R.id.tellJoke)
     public void onClickShowJoke(Button button){
-        new EndpointTask().execute(new Pair<Context, String>(getActivity(), "Www"));
-
-//        Toast.makeText(getContext(), new Joke().getNext(), Toast.LENGTH_SHORT).show();
+        if (mProgressBar != null && mMainFragmentCallback != null){
+            mMainFragmentCallback.onDownloadJokesRequest(mProgressBar);
+        }
     }
 
-    private void startActivityDisplayJoke(String joke){
-        Intent showJoke = new Intent(getContext(), ActivityDisplayJoke.class);
-        showJoke.putExtra(ActivityDisplayJoke.JOKE_EXTRAS, joke);
-        startActivity(showJoke);
+    @Override
+    public void onDownloadStart() {
+        mTellJoke.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDownloadEnd() {
+        mTellJoke.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    public interface MainFragmentCallback {
+        void onDownloadJokesRequest(ProgressBar progressBar);
     }
 }

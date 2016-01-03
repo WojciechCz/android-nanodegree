@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class ActivityDisplayJoke extends AppCompatActivity {
 
     public static final String JOKE_EXTRAS = "com.example.fares.displayjoke.intent_extras";
+    private String[] mJokes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +20,12 @@ public class ActivityDisplayJoke extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().getExtras() != null){
             Bundle bundle = getIntent().getExtras();
-            String joke = bundle.getString(JOKE_EXTRAS, getString(R.string.default_joke_info));
-            ((TextView) findViewById(R.id.textViewJoke)).setText(joke);
+            mJokes = bundle.getStringArray(JOKE_EXTRAS);
+
+            if (mJokes == null || mJokes.length <= 0)
+                ((TextView) findViewById(R.id.textViewJoke)).setText(getString(R.string.default_joke_info));
+            else
+                ((TextView) findViewById(R.id.textViewJoke)).setText(mJokes[0]);
         }
     }
 }

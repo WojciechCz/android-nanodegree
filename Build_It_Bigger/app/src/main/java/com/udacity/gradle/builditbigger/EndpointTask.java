@@ -2,7 +2,10 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.Joke;
@@ -11,17 +14,32 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by fares on 03.01.16.
  */
-public class EndpointTask extends AsyncTask<Pair<Context, String>, Void, Joke> {
+public class EndpointTask extends AsyncTask<Void, Void, List<String>> {
     private static MyApi myApiService = null;
-    private Context context;
+    private Context mContext;
+    private EndpointTaskCallback mEndpointTaskCallback;
+    private ProgressBar mProgressBar;
+
+    public EndpointTask(@NonNull Context context, @NonNull EndpointTaskCallback endpointTaskCallback, @NonNull ProgressBar mProgressBar) {
+        this.mContext = context;
+        this.mProgressBar = mProgressBar;
+        this. mEndpointTaskCallback = endpointTaskCallback;
+    }
 
     @Override
-    protected Joke doInBackground(Pair<Context, String>... params) {
-        if(myApiService == null) {  // Only do this once
+    protected void onPreExecute() {
+        if (mProgressBar != null)
+            mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected List<String> doInBackground(Void... params) {
+        if(myApiService == null) {
             MyApi.Builder builder =
                     new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                     .setRootUrl("https://build-it-bigger-endpoint.appspot.com/_ah/api/");
@@ -29,13 +47,9 @@ public class EndpointTask extends AsyncTask<Pair<Context, String>, Void, Joke> {
             myApiService = builder.build();
         }
 
-        context = params[0].first;
-        String name = params[0].second;
-
         try {
-            myApiService.sayHi(name).execute().getData();
-//            return myApiService.getJoke();
-            return new Joke();
+//            myApiService.sayHi(name).execute().getData();
+            return myApiService.getJoke().execute().getAll();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -43,7 +57,17 @@ public class EndpointTask extends AsyncTask<Pair<Context, String>, Void, Joke> {
     }
 
     @Override
-    protected void onPostExecute(Joke joke) {
-        Toast.makeText(context, joke.getNext(), Toast.LENGTH_LONG).show();
+    protected void onPostExecute(List<String> jokes) {
+        if (mProgressBar != null)
+            mProgressBar.setVisibility(View.GONE);
+
+        mEndpointTaskCallback.onJokesDownloaded(jokes);
+        if (jokes != null && !jokes.isEmpty()){
+            Toast.makeText(mContext, jokes.get(0), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public interface EndpointTaskCallback{
+        void onJokesDownloaded(List<String> jokes);
     }
 }
