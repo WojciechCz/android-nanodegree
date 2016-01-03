@@ -25,7 +25,7 @@ public class EndpointTask extends AsyncTask<Void, Void, List<String>> {
     private EndpointTaskCallback mEndpointTaskCallback;
     private ProgressBar mProgressBar;
 
-    public EndpointTask(@NonNull Context context, @NonNull EndpointTaskCallback endpointTaskCallback, @NonNull ProgressBar mProgressBar) {
+    public EndpointTask(@NonNull Context context, @NonNull EndpointTaskCallback endpointTaskCallback, ProgressBar mProgressBar) {
         this.mContext = context;
         this.mProgressBar = mProgressBar;
         this. mEndpointTaskCallback = endpointTaskCallback;
@@ -62,9 +62,6 @@ public class EndpointTask extends AsyncTask<Void, Void, List<String>> {
             mProgressBar.setVisibility(View.GONE);
 
         mEndpointTaskCallback.onJokesDownloaded(jokes);
-        if (jokes != null && !jokes.isEmpty()){
-            Toast.makeText(mContext, jokes.get(0), Toast.LENGTH_LONG).show();
-        }
     }
 
     public interface EndpointTaskCallback{

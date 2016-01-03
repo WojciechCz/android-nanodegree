@@ -21,13 +21,16 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // Added for AdMob
-    // views casting in java files
+    compile 'com.android.support:appcompat-v7:23.1.1'
     // joke java lib
     compile project(':chuck-norris-jokes')
     compile project(':displayjoke')
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    // Added for AdMob
     compile 'com.google.android.gms:play-services-ads:8.4.0'
+    // views casting in java files
     compile 'com.jakewharton:butterknife:7.0.1'
+    // TESTs
+    testCompile 'junit:junit:4.12'
+    // backend integration
     compile project(path: ':jokes-backend', configuration: 'android-endpoints')
 }
