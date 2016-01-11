@@ -57,6 +57,7 @@
     <color name="hint_foreground_material_dark">@color/bright_foreground_disabled_material_dark</color>
     <color name="hint_foreground_material_light">@color/bright_foreground_disabled_material_light</color>
     <color name="icons">#FFFFFF</color>
+    <color name="list_item_text_background">#aa727272</color>
     <color name="material_blue_grey_800">#ff37474f</color>
     <color name="material_blue_grey_900">#ff263238</color>
     <color name="material_blue_grey_950">#ff21272b</color>
@@ -69,7 +70,7 @@
     <color name="material_grey_800">#ff424242</color>
     <color name="material_grey_850">#ff303030</color>
     <color name="material_grey_900">#ff212121</color>
-    <color name="photo_placeholder">#727272</color>
+    <color name="photo_placeholder">#B6B6B6</color>
     <color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="primary_dark_material_dark">@android:color/black</color>
@@ -239,8 +240,10 @@
     <dimen name="detail_body_bottom_margin">88dp</dimen>
     <dimen name="detail_body_text_size">22sp</dimen>
     <dimen name="detail_body_top_margin">16dp</dimen>
+    <dimen name="detail_card_bottom_margin">50dp</dimen>
     <dimen name="detail_card_max_width">10000dp</dimen>
     <dimen name="detail_card_top_margin">@dimen/detail_photo_height</dimen>
+    <dimen name="detail_image_height">256dp</dimen>
     <dimen name="detail_inner_horiz_margin">16dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">4dp</dimen>
     <dimen name="detail_metabar_vert_padding">16dp</dimen>
@@ -248,6 +251,12 @@
     <dimen name="detail_title_text_size">32sp</dimen>
     <item format="float" name="disabled_alpha_material_dark" type="dimen">0.30</item>
     <item format="float" name="disabled_alpha_material_light" type="dimen">0.26</item>
+    <dimen name="elevation_app_bar">4dp</dimen>
+    <dimen name="elevation_card_state_picked_up">8dp</dimen>
+    <dimen name="elevation_card_state_rest">2dp</dimen>
+    <dimen name="elevation_dialog">24dp</dimen>
+    <dimen name="elevation_fab_state_pressed">12dp</dimen>
+    <dimen name="elevation_fab_state_rest">6dp</dimen>
     <dimen name="fab_elevation">2dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
     <dimen name="fab_press_translation_z">6dp</dimen>
@@ -260,6 +269,7 @@
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
+    <dimen name="toolbar_backdrop_height">256dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <item format="float" name="detail_body_line_spacing_multiplier" type="fraction">1.25</item>
     <item name="action_bar_activity_content" type="id"/>
@@ -1256,6 +1266,11 @@
         <item name="tabBackground">?attr/selectableItemBackground</item>
         <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+    <style name="CardStyle" parent="@style/CardView.Light">
+        <item name="android:layout_marginTop">@dimen/detail_card_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/detail_card_bottom_margin</item>
+        <item name="android:maxWidth">@dimen/detail_card_max_width</item>
     </style>
     <style name="CardView">
         <item name="cardBackgroundColor">@color/cardview_light_background</item>

@@ -30,4 +30,11 @@
         <item name="android:background">@color/primary</item>
     </style>
 
+    <style name="CardStyle" parent="@style/CardView.Light">
+        <item name="android:layout_marginTop">@dimen/detail_card_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/detail_card_bottom_margin</item>
+        <item name="android:maxWidth">@dimen/detail_card_max_width</item>
+    </style>
+
+
 </resources>

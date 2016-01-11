@@ -9,4 +9,17 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/primary</item>
+        <!--<item name="android:elevation">@dimen/elevation_app_bar</item>-->
+    </style>
+
+    <style name="CardStyle" parent="@style/CardView.Light">
+        <item name="android:layout_marginTop">@dimen/detail_card_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/detail_card_bottom_margin</item>
+        <item name="android:elevation">@dimen/elevation_card_state_rest</item>
+        <item name="android:maxWidth">@dimen/detail_card_max_width</item>
+    </style>
+
+
 </resources>

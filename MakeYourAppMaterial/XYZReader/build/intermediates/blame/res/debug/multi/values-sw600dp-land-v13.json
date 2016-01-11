@@ -32,11 +32,11 @@
                 "from": {
                     "file": "/home/fares/android-repos/udacity/android-nanodegree/MakeYourAppMaterial/XYZReader/src/main/res/values-sw600dp-land/macro_layout.xml",
                     "position": {
-                        "startLine": 5,
+                        "startLine": 6,
                         "startColumn": 4,
-                        "startOffset": 133,
+                        "startOffset": 185,
                         "endColumn": 54,
-                        "endOffset": 183
+                        "endOffset": 235
                     }
                 }
             },
@@ -47,6 +47,25 @@
                     "startOffset": 154,
                     "endColumn": 51,
                     "endOffset": 201
+                },
+                "from": {
+                    "file": "/home/fares/android-repos/udacity/android-nanodegree/MakeYourAppMaterial/XYZReader/src/main/res/values-sw600dp-land/macro_layout.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 133,
+                        "endColumn": 51,
+                        "endOffset": 180
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 206,
+                    "endColumn": 51,
+                    "endOffset": 253
                 },
                 "from": {
                     "file": "/home/fares/android-repos/udacity/android-nanodegree/MakeYourAppMaterial/XYZReader/src/main/res/values-sw600dp-land/macro_layout.xml",

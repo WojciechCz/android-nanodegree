@@ -7,6 +7,7 @@
     <dimen name="abc_config_prefDialogWidth">580dp</dimen>
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
+    <dimen name="activity_article_list_padding_bottom">100dp</dimen>
     <dimen name="design_snackbar_action_inline_max_width">0dp</dimen>
     <dimen name="design_snackbar_background_corner_radius">2dp</dimen>
     <dimen name="design_snackbar_extra_spacing_horizontal">24dp</dimen>
@@ -16,7 +17,7 @@
     <dimen name="design_tab_scrollable_min_width">160dp</dimen>
     <dimen name="detail_body_bottom_margin">96dp</dimen>
     <dimen name="detail_body_text_size">20sp</dimen>
-    <dimen name="detail_card_top_margin">384dp</dimen>
+    <dimen name="detail_card_top_margin">200dp</dimen>
     <dimen name="detail_inner_horiz_margin">64dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
     <dimen name="detail_metabar_vert_padding">32dp</dimen>
