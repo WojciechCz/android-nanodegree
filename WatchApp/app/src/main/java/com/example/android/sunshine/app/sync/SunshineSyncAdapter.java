@@ -36,6 +36,7 @@ import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.Utility;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.muzei.WeatherMuzeiSource;
+import com.example.android.sunshine.app.wearable.UtilWearable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -330,6 +331,12 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, weatherId);
 
                 cVVector.add(weatherValues);
+
+                Bitmap icon = BitmapFactory.decodeResource(
+                        getContext().getResources(),
+                        Utility.getIconResourceForWeatherCondition(weatherId));
+                if (icon != null)
+                    updateWearable(high, low, icon);
             }
 
             int inserted = 0;
@@ -342,7 +349,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 // delete old data so we don't build up an endless history
                 getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
                         WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
-                        new String[] {Long.toString(dayTime.setJulianDay(julianStartDay-1))});
+                        new String[]{Long.toString(dayTime.setJulianDay(julianStartDay-1))});
 
                 updateWidgets();
                 updateMuzei();
@@ -374,6 +381,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             context.startService(new Intent(ACTION_DATA_UPDATED)
                     .setClass(context, WeatherMuzeiSource.class));
         }
+    }
+
+    private void updateWearable(Double tempHigh, Double tempLow, Bitmap bitmap){
+        UtilWearable utilWearable = new UtilWearable(getContext());
+        utilWearable.sendWeatherInfo(tempHigh, tempLow, bitmap);
     }
 
     private void notifyWeather() {
