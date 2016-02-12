@@ -35,7 +35,7 @@ public class UtilWearable {
     }
 
     public void sendWeatherInfo(Double tempHigh, Double tempLow, Bitmap bitmap){
-        if (bitmap != null && mGoogleApiClient.isConnected())
+        if (bitmap != null)
             sendDataItems(tempHigh, tempLow, toAsset(bitmap));
     }
 
@@ -56,7 +56,8 @@ public class UtilWearable {
         putDataMapRequest.getDataMap().putAsset(DATA_ITEM_IMAGE, asset);
 
         mGoogleApiClient.connect();
-        if (!mGoogleApiClient.isConnected())
+        boolean connected = mGoogleApiClient.isConnected();
+        if (!connected)
             return;
 
         Wearable.DataApi.putDataItem(mGoogleApiClient, putDataMapRequest.asPutDataRequest());

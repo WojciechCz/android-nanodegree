@@ -16,6 +16,8 @@
         android:theme="@android:style/Theme.DeviceDefault">
         <service
             android:name=".WatchFace"
+            android:allowEmbedded="true"
+            android:taskAffinity=""
             android:label="@string/my_digital_name"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
@@ -30,7 +32,6 @@
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService"/>
-
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE"/>
             </intent-filter>
         </service>
