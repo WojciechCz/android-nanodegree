@@ -50,6 +50,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -129,6 +130,8 @@ public class WatchFace extends CanvasWatchFaceService {
         private static final String DATA_ITEM_IMAGE = "image";
         private Double mTempHeigh, mTempLow;
         private Bitmap mWeatherImage;
+
+        private float mTextSize, mTextSizeDate;
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -224,16 +227,17 @@ public class WatchFace extends CanvasWatchFaceService {
 
             Resources resources = WatchFace.this.getResources();
             boolean isRound = insets.isRound();
-            final float textSize = resources.getDimension(isRound ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
+            mTextSize     = resources.getDimension(isRound ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
+            mTextSizeDate = resources.getDimension(isRound ? R.dimen.digital_text_size_round_small : R.dimen.digital_text_size_small);
 
             mXOffset = resources.getDimension(isRound ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
 
-            mPaintHours     .setTextSize(textSize);
-            mPaintTimeColon .setTextSize(textSize);
-            mPaintMinutes   .setTextSize(textSize);
-            mPaintDate      .setTextSize(textSize);
-            mPaintTempHigh  .setTextSize(textSize);
-            mPaintTempLow   .setTextSize(textSize);
+            mPaintHours     .setTextSize(mTextSize);
+            mPaintTimeColon .setTextSize(mTextSize);
+            mPaintMinutes   .setTextSize(mTextSize);
+            mPaintDate      .setTextSize(mTextSizeDate);
+            mPaintTempHigh  .setTextSize(mTextSize);
+            mPaintTempLow   .setTextSize(mTextSize);
 //            mTextPaint.setTextSize(resources.getDimension(isRound ? R.dimen.digital_text_size_round : R.dimen.digital_text_size));
         }
 
@@ -285,10 +289,20 @@ public class WatchFace extends CanvasWatchFaceService {
             // Draw hours and minutes
             String hours = String.format("%02d", mTime.get(Calendar.HOUR) == 0 ? 12 : mTime.get(Calendar.HOUR));
             String minutes = String.format("%02d", mTime.get(Calendar.MINUTE));
-            canvas.drawText(hours   , centerX-mPaintHours.measureText(hours)        , mYOffset, mPaintHours);
-            canvas.drawText(":"     , centerX                                       , mYOffset, mPaintTimeColon);
-            canvas.drawText(minutes , centerX+mPaintTimeColon.measureText(":")  , mYOffset, mPaintMinutes);
+            String date = getFormattedDate(new Date(currentTimeMillis));
 
+            final float offsetXHours = centerX-mPaintHours.measureText(hours);
+            final float offsetXColon = centerX;
+            final float offsetXMinutes= centerX+mPaintTimeColon.measureText(":");
+            final float offsetXDate = (bounds.width()-mPaintDate.measureText(date)) / 2;
+            Rect colonBounds = new Rect();
+            mPaintTimeColon.getTextBounds(";", 0, 1, colonBounds);
+            final float offsetYDate = mYOffset + colonBounds.height();
+
+            canvas.drawText(hours   , offsetXHours   , mYOffset, mPaintHours);
+            canvas.drawText(":"     , offsetXColon   , mYOffset, mPaintTimeColon);
+            canvas.drawText(minutes , offsetXMinutes , mYOffset, mPaintMinutes);
+            canvas.drawText(date    , offsetXDate    , offsetYDate, mPaintDate);
 
 //            String text = mAmbient
 //                    ? String.format("%d:%02d", mTime.get(Calendar.HOUR), mTime.get(Calendar.MINUTE))
@@ -299,6 +313,11 @@ public class WatchFace extends CanvasWatchFaceService {
 
 //            if (mWeatherImage != null)
 //                canvas.drawBitmap(mWeatherImage, 0, 0, null);
+        }
+
+        private String getFormattedDate(Date date){
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM F yyyy");
+            return sdf.format(date);
         }
 
         /**
