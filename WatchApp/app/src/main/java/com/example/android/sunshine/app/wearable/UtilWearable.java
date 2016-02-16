@@ -3,9 +3,12 @@ package com.example.android.sunshine.app.wearable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 
@@ -15,52 +18,68 @@ import java.io.IOException;
 /**
  * Created by fares on 11.02.16.
  */
-public class UtilWearable {
+public class UtilWearable implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String LOGTAG = UtilWearable.class.getSimpleName();
     private static final String WEATHER = "/today-weather";
     private static final String DATA_ITEM_HIGH = "high";
     private static final String DATA_ITEM_LOW = "low";
     private static final String DATA_ITEM_IMAGE = "image";
+    private static final String DATA_ITEM_TEST = "test_time";
 
 
     private GoogleApiClient mGoogleApiClient;
+    private PutDataMapRequest mPutDataMapRequest;
     private Context mContext;
 
     public UtilWearable(Context context) {
         mContext = context;
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
                 .build();
 
     }
 
     public void sendWeatherInfo(Double tempHigh, Double tempLow, Bitmap bitmap){
-        if (bitmap != null)
-            sendDataItems(tempHigh, tempLow, toAsset(bitmap));
-    }
+        if (mGoogleApiClient == null)
+            return;
 
+        if (bitmap != null)
+            prepareDataItem(tempHigh, tempLow, toAsset(bitmap));
+
+        if (!tryToSendDataItems() && !mGoogleApiClient.isConnecting())
+            mGoogleApiClient.connect();
+    }
     /**
-    * Sends weather data info to wearable app.
+     * Sends weather data info to wearable app.
      * @param tempHigh - string with formatted max temp in day.
      * @param tempLow - string with formatted min temp in day.
      * @param asset - asset which contains image to send.
      */
-    private void sendDataItems(Double tempHigh, Double tempLow, Asset asset){
-        if (mGoogleApiClient == null)
-            return;
+    private void prepareDataItem(Double tempHigh, Double tempLow, Asset asset){
+        mPutDataMapRequest = PutDataMapRequest.create(WEATHER);
+//        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_HIGH, tempHigh);
+//        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_LOW, tempLow);
+//        mPutDataMapRequest.getDataMap().putAsset(DATA_ITEM_IMAGE, asset);
+        Log.d(LOGTAG, "Sending data at: " + System.currentTimeMillis());
+        mPutDataMapRequest.getDataMap().putLong(DATA_ITEM_TEST, System.currentTimeMillis());
+    }
 
-        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(WEATHER);
 
-        putDataMapRequest.getDataMap().putDouble(DATA_ITEM_HIGH, tempHigh);
-        putDataMapRequest.getDataMap().putDouble(DATA_ITEM_LOW, tempLow);
-        putDataMapRequest.getDataMap().putAsset(DATA_ITEM_IMAGE, asset);
+    private boolean tryToSendDataItems(){
+        boolean isConnected = mGoogleApiClient.isConnected();
+        if (isConnected) {
+            new Thread(() -> {
+                DataApi.DataItemResult result = Wearable.DataApi.putDataItem(mGoogleApiClient, mPutDataMapRequest.asPutDataRequest().setUrgent()).await();
+                if (result.getStatus().isSuccess()) {
+                    Log.v(LOGTAG, "DataMap: " + mPutDataMapRequest.asPutDataRequest() + " sent successfully to data layer ");
+                }
+            }).start();
+        }
 
-        mGoogleApiClient.connect();
-        boolean connected = mGoogleApiClient.isConnected();
-        if (!connected)
-            return;
-
-        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataMapRequest.asPutDataRequest());
+        return isConnected;
     }
 
     /**
@@ -86,4 +105,18 @@ public class UtilWearable {
         }
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        tryToSendDataItems();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(LOGTAG, connectionResult.toString());
+    }
 }

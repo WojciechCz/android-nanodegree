@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.fares.wearableapp;
+package com.example.android.sunshine.wearableapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,13 +33,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.text.format.Time;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
-import com.google.android.gms.common.ConnectionResult;
+import com.example.android.wearableapp.R;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -49,14 +48,11 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import static android.text.format.DateFormat.*;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
@@ -65,6 +61,8 @@ import static android.text.format.DateFormat.*;
 public class WatchFace extends CanvasWatchFaceService {
     private static final Typeface NORMAL_TYPEFACE = Typeface.create(Typeface.SERIF, Typeface.NORMAL);
     private static final Typeface BOLD_TYPEFACE   = Typeface.create(Typeface.SERIF, Typeface.BOLD);
+
+    private static final String LOGTAG = WatchFace.class.getSimpleName();
     /**
      * Update rate in milliseconds for interactive mode. We update once a second since seconds are
      * displayed in interactive mode.
@@ -101,8 +99,9 @@ public class WatchFace extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine
-            implements DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener {
+            implements DataApi.DataListener
+//          GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+    {
 
         final Handler mUpdateTimeHandler = new EngineHandler(this);
 
@@ -143,8 +142,8 @@ public class WatchFace extends CanvasWatchFaceService {
 
 
         private GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(WatchFace.this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
 
@@ -281,7 +280,6 @@ public class WatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             // init time
-            final boolean is24HourSpan = is24HourFormat(WatchFace.this);
             final float centerX = bounds.width() / 2f;
             final float centerY = bounds.height() / 2f;
             final long currentTimeMillis = System.currentTimeMillis();
@@ -321,7 +319,7 @@ public class WatchFace extends CanvasWatchFaceService {
             final float offsetXImageTop  = offsetYLine + mLineOffsetY;
             if (mWeatherImage != null)
                 canvas.drawBitmap(mWeatherImage, offsetXImageLeft, offsetXImageTop, null);
-            
+
             if (mTempHigh != null && mTempLow != null) {
                 final String tempHigh = mTempHigh + "\u00b0";
                 final String tempLow = mTempLow + "\u00b0";
@@ -375,6 +373,7 @@ public class WatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onDataChanged(DataEventBuffer dataEventBuffer) {
+            Log.d(LOGTAG, "------- RECEIVER DATA");
             for (DataEvent data : dataEventBuffer){
                 if (data.getType() == DataEvent.TYPE_CHANGED){
                     String path = data.getDataItem().getUri().getPath();
@@ -395,20 +394,22 @@ public class WatchFace extends CanvasWatchFaceService {
                 }
             }
         }
-
-        @Override
-        public void onConnected(Bundle bundle) {
-
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-
-        }
-
-        @Override
-        public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        }
+//
+//        @Override
+//        public void onConnected(Bundle bundle) {
+//            Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
+//            Wearable.DataApi.addListener(mGoogleApiClient, new ListenerService());
+//        }
+//
+//        @Override
+//        public void onConnectionSuspended(int i) {
+//
+//        }
+//
+//        @Override
+//        public void onConnectionFailed(ConnectionResult connectionResult) {
+//            Log.d(LOGTAG, connectionResult.toString());
+//            Log.d(LOGTAG, "onConnectionFailed: SOMETHING IS WRONG!    " + connectionResult.getErrorMessage());
+//        }
     }
 }
