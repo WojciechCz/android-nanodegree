@@ -3,10 +3,17 @@
     <dimen name="digital_text_size">40dp</dimen>
     <dimen name="digital_text_size_round">45dp</dimen>
 
-    <dimen name="digital_text_size_small">20dp</dimen>
-    <dimen name="digital_text_size_round_small">25dp</dimen>
+    <dimen name="digital_text_size_small">18dp</dimen>
+    <dimen name="digital_text_size_round_small">22dp</dimen>
+
+    <dimen name="digital_text_size_temp">20dp</dimen>
+    <dimen name="digital_text_size_round_temp">25dp</dimen>
 
     <dimen name="digital_x_offset">15dp</dimen>
     <dimen name="digital_x_offset_round">25dp</dimen>
     <dimen name="digital_y_offset">60dp</dimen> <!-- 90dp -->
+
+    <dimen name="line_x_offset">60dp</dimen>
+    <dimen name="line_y_offset">10dp</dimen>
+    <dimen name="image_x_offset">65dp</dimen>
 </resources>

@@ -63,8 +63,8 @@ import static android.text.format.DateFormat.*;
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class WatchFace extends CanvasWatchFaceService {
-    private static final Typeface NORMAL_TYPEFACE = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
-    private static final Typeface BOLD_TYPEFACE = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+    private static final Typeface NORMAL_TYPEFACE = Typeface.create(Typeface.SERIF, Typeface.NORMAL);
+    private static final Typeface BOLD_TYPEFACE   = Typeface.create(Typeface.SERIF, Typeface.BOLD);
     /**
      * Update rate in milliseconds for interactive mode. We update once a second since seconds are
      * displayed in interactive mode.
@@ -109,9 +109,9 @@ public class WatchFace extends CanvasWatchFaceService {
         boolean mRegisteredTimeZoneReceiver = false;
         boolean mAmbient;
 
-        Paint mBackgroundPaint;
-        Paint mPaintHours, mPaintTimeColon, mPaintMinutes, mPaintTempHigh,
-                mPaintTempLow, mPaintDate;
+        private Paint mBackgroundPaint, mPaintLine;
+        private Paint mPaintHours, mPaintTimeColon, mPaintMinutes,
+                mPaintTempHigh, mPaintTempLow, mPaintDate;
 
         Calendar mTime;
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
@@ -128,10 +128,12 @@ public class WatchFace extends CanvasWatchFaceService {
         private static final String DATA_ITEM_HIGH = "high";
         private static final String DATA_ITEM_LOW = "low";
         private static final String DATA_ITEM_IMAGE = "image";
-        private Double mTempHeigh, mTempLow;
+        private Double mTempHigh, mTempLow;
         private Bitmap mWeatherImage;
 
-        private float mTextSize, mTextSizeDate;
+        private float mLineOffsetX, mLineOffsetY, mImageOffsetX;
+
+        private float mTextSize, mTextSizeDate, mTextSizeTemp;
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -156,10 +158,15 @@ public class WatchFace extends CanvasWatchFaceService {
                     .setShowSystemUiTime(false)
                     .build());
             Resources resources = WatchFace.this.getResources();
-            mYOffset = resources.getDimension(R.dimen.digital_y_offset);
+            mYOffset      = resources.getDimension(R.dimen.digital_y_offset);
+            mLineOffsetX  = resources.getDimension(R.dimen.line_x_offset);
+            mLineOffsetY  = resources.getDimension(R.dimen.line_y_offset);
+            mImageOffsetX = resources.getDimension(R.dimen.image_x_offset);
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(getColor(R.color.primary));
+            mPaintLine = new Paint();
+            mPaintLine.setColor(getColor(R.color.secondary_text));
 
             mPaintHours     = createTextPaint(getColor(R.color.primary_text), BOLD_TYPEFACE);
             mPaintTimeColon = createTextPaint(getColor(R.color.secondary_text), NORMAL_TYPEFACE);
@@ -229,6 +236,7 @@ public class WatchFace extends CanvasWatchFaceService {
             boolean isRound = insets.isRound();
             mTextSize     = resources.getDimension(isRound ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
             mTextSizeDate = resources.getDimension(isRound ? R.dimen.digital_text_size_round_small : R.dimen.digital_text_size_small);
+            mTextSizeTemp = resources.getDimension(isRound ? R.dimen.digital_text_size_round_temp : R.dimen.digital_text_size_temp);
 
             mXOffset = resources.getDimension(isRound ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
 
@@ -236,8 +244,8 @@ public class WatchFace extends CanvasWatchFaceService {
             mPaintTimeColon .setTextSize(mTextSize);
             mPaintMinutes   .setTextSize(mTextSize);
             mPaintDate      .setTextSize(mTextSizeDate);
-            mPaintTempHigh  .setTextSize(mTextSize);
-            mPaintTempLow   .setTextSize(mTextSize);
+            mPaintTempHigh  .setTextSize(mTextSizeTemp);
+            mPaintTempLow   .setTextSize(mTextSizeTemp);
 //            mTextPaint.setTextSize(resources.getDimension(isRound ? R.dimen.digital_text_size_round : R.dimen.digital_text_size));
         }
 
@@ -299,20 +307,33 @@ public class WatchFace extends CanvasWatchFaceService {
             mPaintTimeColon.getTextBounds(";", 0, 1, colonBounds);
             final float offsetYDate = mYOffset + colonBounds.height();
 
-            canvas.drawText(hours   , offsetXHours   , mYOffset, mPaintHours);
-            canvas.drawText(":"     , offsetXColon   , mYOffset, mPaintTimeColon);
-            canvas.drawText(minutes , offsetXMinutes , mYOffset, mPaintMinutes);
-            canvas.drawText(date    , offsetXDate    , offsetYDate, mPaintDate);
+            final float offsetXLineLeft  = centerX - (mLineOffsetX/2);
+            final float offsetXLineRight = centerX + (mLineOffsetX/2);
+            final float offsetYLine      = centerY + mLineOffsetY;
+            canvas.drawLine(offsetXLineLeft, offsetYLine, offsetXLineRight, offsetYLine, mPaintLine);
 
-//            String text = mAmbient
-//                    ? String.format("%d:%02d", mTime.get(Calendar.HOUR), mTime.get(Calendar.MINUTE))
-//                    : String.format("%d:%02d:%02d", mTime.get(Calendar.HOUR), mTime.get(Calendar.MINUTE), mTime.get(Calendar.SECOND));
-            String text = String.format("%d:%02d:%02d", mTime.get(Calendar.HOUR), mTime.get(Calendar.MINUTE), mTime.get(Calendar.SECOND));
-//            canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
+            canvas.drawText(hours, offsetXHours, mYOffset, mPaintHours);
+            canvas.drawText(":"    , offsetXColon  , mYOffset   , mPaintTimeColon);
+            canvas.drawText(minutes, offsetXMinutes, mYOffset   , mPaintMinutes);
+            canvas.drawText(date   , offsetXDate   , offsetYDate, mPaintDate);
 
+            final float offsetXImageLeft = centerX - mImageOffsetX;
+            final float offsetXImageTop  = offsetYLine + mLineOffsetY;
+            if (mWeatherImage != null)
+                canvas.drawBitmap(mWeatherImage, offsetXImageLeft, offsetXImageTop, null);
+            
+            if (mTempHigh != null && mTempLow != null) {
+                final String tempHigh = mTempHigh + "\u00b0";
+                final String tempLow = mTempLow + "\u00b0";
+                Rect tempBounds = new Rect();
+                mPaintTempHigh.getTextBounds("1", 0, 1, tempBounds);
+                final float tempHighOffsetX = offsetXImageLeft + mWeatherImage.getWidth();
+                final float tempLowOffsetX = tempHighOffsetX + mWeatherImage.getWidth();
+                final float tempOffsetY = offsetXImageTop - tempBounds.height() + mWeatherImage.getHeight();
 
-//            if (mWeatherImage != null)
-//                canvas.drawBitmap(mWeatherImage, 0, 0, null);
+                canvas.drawText(tempHigh, tempHighOffsetX, tempOffsetY, mPaintTempHigh);
+                canvas.drawText(tempLow, tempLowOffsetX, tempOffsetY, mPaintTempLow);
+            }
         }
 
         private String getFormattedDate(Date date){
@@ -361,7 +382,7 @@ public class WatchFace extends CanvasWatchFaceService {
                     if (WEATHER.equals(path)){
                         DataMap dataMap = DataMapItem.fromDataItem(data.getDataItem()).getDataMap();
                         if (dataMap.containsKey(DATA_ITEM_HIGH))
-                            mTempHeigh = dataMap.getDouble(DATA_ITEM_HIGH);
+                            mTempHigh = dataMap.getDouble(DATA_ITEM_HIGH);
                         if (dataMap.containsKey(DATA_ITEM_LOW))
                             mTempLow = dataMap.getDouble(DATA_ITEM_LOW);
                         if (dataMap.containsKey(DATA_ITEM_IMAGE)) {
