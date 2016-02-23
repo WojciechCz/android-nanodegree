@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,12 +39,16 @@ import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
 import com.example.android.wearableapp.R;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.io.InputStream;
@@ -98,10 +103,8 @@ public class WatchFace extends CanvasWatchFaceService {
         }
     }
 
-    private class Engine extends CanvasWatchFaceService.Engine
-            implements DataApi.DataListener
-//          GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-    {
+    private class Engine extends CanvasWatchFaceService.Engine implements DataApi.DataListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
         final Handler mUpdateTimeHandler = new EngineHandler(this);
 
@@ -117,6 +120,7 @@ public class WatchFace extends CanvasWatchFaceService {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mTime.setTimeZone(TimeZone.getDefault());
+                invalidate();
             }
         };
 
@@ -389,16 +393,43 @@ public class WatchFace extends CanvasWatchFaceService {
                             mWeatherImage = BitmapFactory.decodeStream(assetInputStream);
                         }
                     }
-
                     invalidate();
                 }
             }
         }
-//
+
+      @Override public void onConnected(Bundle bundle) {
+        Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
+
+        final DataItemResultCallback.FetchConfigDataMapCallback callback = config -> {
+          PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(WEATHER);
+          DataMap configToPut = putDataMapRequest.getDataMap();
+          configToPut.putAll(config);
+          Wearable.DataApi.putDataItem(mGoogleApiClient, putDataMapRequest.asPutDataRequest());
+        };
+
+        Wearable.NodeApi.getLocalNode(mGoogleApiClient).setResultCallback(getLocalNodeResult -> {
+          String localNode =
+              getLocalNodeResult.getNode().getId();
+          Uri uri = new Uri.Builder().scheme("wear")
+              .path(WEATHER)
+              .authority(localNode).build();
+          Wearable.DataApi.getDataItem(mGoogleApiClient, uri).setResultCallback(new DataItemResultCallback(callback));
+        });
+      }
+
+      @Override public void onConnectionSuspended(int i) {
+
+      }
+
+      @Override public void onConnectionFailed(ConnectionResult connectionResult) {
+
+      }
+      //
 //        @Override
 //        public void onConnected(Bundle bundle) {
 //            Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
-//            Wearable.DataApi.addListener(mGoogleApiClient, new ListenerService());
+//            Wearable.DataApi.addListener(mGoogleApiClient, new DataItemResultCallback());
 //        }
 //
 //        @Override

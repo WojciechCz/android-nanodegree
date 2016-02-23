@@ -37,7 +37,7 @@
         </service>
 
         <service
-            android:name="com.example.android.sunshine.wearableapp.ListenerService"
+            android:name="com.example.android.sunshine.wearableapp.DataItemResultCallback"
             android:enabled="true"
             android:exported="true"
             >
