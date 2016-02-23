@@ -60,9 +60,9 @@ public class UtilWearable implements GoogleApiClient.ConnectionCallbacks, Google
      */
     private void prepareDataItem(Double tempHigh, Double tempLow, Asset asset){
         mPutDataMapRequest = PutDataMapRequest.create(WEATHER);
-//        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_HIGH, tempHigh);
-//        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_LOW, tempLow);
-//        mPutDataMapRequest.getDataMap().putAsset(DATA_ITEM_IMAGE, asset);
+        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_HIGH, tempHigh);
+        mPutDataMapRequest.getDataMap().putDouble(DATA_ITEM_LOW, tempLow);
+        mPutDataMapRequest.getDataMap().putAsset(DATA_ITEM_IMAGE, asset);
         Log.d(LOGTAG, "Sending data at: " + System.currentTimeMillis());
         mPutDataMapRequest.getDataMap().putLong(DATA_ITEM_TEST, System.currentTimeMillis());
     }
